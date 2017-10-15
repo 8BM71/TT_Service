@@ -1,0 +1,7 @@
+subprojects {
+	apply from: rootProject.file('common.gradle')
+}
+
+task wrapper(type: Wrapper) {
+	gradleVersion = '4.2'
+}
