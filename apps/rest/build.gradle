@@ -16,10 +16,14 @@ repositories {
 }
 
 dependencies {
-	compile 'org.springframework.boot:spring-boot-starter'
-	compile 'org.springframework.boot:spring-boot-starter-web'
-	compile 'org.springframework.boot:spring-boot-starter-data-jpa'
-	compile 'org.springframework.boot:spring-boot-starter-data-rest'
+	compile "org.springframework.boot:spring-boot-starter"
+	compile "org.springframework.boot:spring-boot-starter-web"
+	compile "org.springframework.boot:spring-boot-starter-data-jpa"
+	compile "org.springframework.boot:spring-boot-starter-data-rest"
+	compile "org.codehaus.groovy:groovy-all:${groovyVersion}"
 
-	testCompile 'org.springframework.boot:spring-boot-starter-test'
+	runtime "com.h2database:h2"
+
+	testCompile "org.spockframework:spock-spring:${spockSpringVersion}"
+	testCompile "org.springframework.boot:spring-boot-starter-test"
 }
