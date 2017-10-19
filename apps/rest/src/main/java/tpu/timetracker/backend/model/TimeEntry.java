@@ -5,7 +5,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "TIMEENTRY")
-class TimeEntry extends AbstractEntity {
+public class TimeEntry extends AbstractEntity {
 
   private static final long serialVersionUID = 3527966648186016367L;
 
