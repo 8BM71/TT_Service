@@ -1,18 +1,23 @@
 package tpu.timetracker.backend.model;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.util.List;
+import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "PROJECTS")
+@Table(name = "PROJECT")
 class Project extends AbstractEntity {
 
   private static final long serialVersionUID = -319754945356826471L;
 
+  @Size(min = 3)
   private String name;
 
-  private List<Task> tasks;
+  @ManyToOne
+  @JoinColumn(name = "WORKSPACE_ID")
+  private Workspace workspace;
 
   public Project(String name) {
     this.name = name;
@@ -24,5 +29,9 @@ class Project extends AbstractEntity {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public Workspace getWorkspace() {
+    return workspace;
   }
 }

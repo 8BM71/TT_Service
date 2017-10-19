@@ -1,19 +1,26 @@
 package tpu.timetracker.backend.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "TASKS")
+@Table(name = "TASK")
 class Task extends AbstractEntity {
 
   private static final long serialVersionUID = -4968820022482424460L;
 
+  @Size(min = 3)
+  private String name;
+
+  @ManyToOne
+  @JoinColumn(name = "PROJECT_ID")
+  private Project project;
+
+  @JoinColumn(name = "TIMEENTRY_ID")
   private TimeEntry timeEntry;
 
+  @Column
   private String description;
-
-  private Project project;
 
   public Task(Project project) {
     this.project = project;

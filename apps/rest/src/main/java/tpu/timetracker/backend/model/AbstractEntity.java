@@ -5,10 +5,11 @@ import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @MappedSuperclass
-@EntityListeners({AbstractEntity.AbstractEntityListener.class})
+@EntityListeners(AbstractEntity.AbstractEntityListener.class)
 class AbstractEntity implements Serializable {
 
   private static final long serialVersionUID = -6229400610384798507L;
@@ -16,8 +17,18 @@ class AbstractEntity implements Serializable {
   private static final Logger log = LoggerFactory.getLogger(AbstractEntity.class);
 
   @Id
+  @GeneratedValue
   @Column (length = 32)
   private String id;
+
+  @Temporal(TemporalType.DATE)
+  @Column(name = "CRDATE")
+  private LocalDate creationDate;
+
+  @PrePersist
+  void creationDate() {
+    this.creationDate = LocalDate.now();
+  }
 
   String uid() {
     if (id == null) {
@@ -26,6 +37,10 @@ class AbstractEntity implements Serializable {
     }
 
     return id;
+  }
+
+  public LocalDate getCreationDate() {
+    return creationDate;
   }
 
   public static class AbstractEntityListener {
