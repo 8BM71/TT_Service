@@ -22,7 +22,8 @@ public class TimeEntry extends AbstractEntity {
   @JoinColumn(name = "TASK_ID")
   private Task task;
 
-  public TimeEntry() {
+  public TimeEntry(Task t) {
+    this.task = t;
   }
 
   public Long getDuration() {
@@ -51,9 +52,5 @@ public class TimeEntry extends AbstractEntity {
 
   public Task getTask() {
     return task;
-  }
-
-  public void setTask(Task task) {
-    this.task = task;
   }
 }

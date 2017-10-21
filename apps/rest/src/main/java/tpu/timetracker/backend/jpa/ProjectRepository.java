@@ -10,6 +10,6 @@ import java.util.Optional;
 
 @RepositoryRestResource(exported = false)
 public interface ProjectRepository extends JpaRepository<Project, String> {
-  Optional<Project> findByWorkspace(Workspace ws);
+  Optional<Project> findByWorkspaceAndName(Workspace ws, String name);
   Collection<Project> findAllByWorkspace(Workspace ws);
 }

@@ -46,7 +46,11 @@ public class Task extends AbstractEntity {
     return project;
   }
 
-  public void setProject(Project project) {
-    this.project = project;
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 }

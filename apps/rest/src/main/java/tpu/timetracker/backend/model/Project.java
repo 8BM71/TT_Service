@@ -19,7 +19,8 @@ public class Project extends AbstractEntity {
   @JoinColumn(name = "WORKSPACE_ID")
   private Workspace workspace;
 
-  public Project(String name) {
+  public Project(Workspace ws, String name) {
+    this.workspace = ws;
     this.name = name;
   }
 

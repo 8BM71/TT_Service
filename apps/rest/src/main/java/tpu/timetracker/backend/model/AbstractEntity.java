@@ -39,6 +39,10 @@ class AbstractEntity implements Serializable {
     return id;
   }
 
+  public String getId() {
+    return id;
+  }
+
   public LocalDate getCreationDate() {
     return creationDate;
   }

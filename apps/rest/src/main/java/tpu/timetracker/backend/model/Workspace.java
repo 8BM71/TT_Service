@@ -17,8 +17,9 @@ public class Workspace extends AbstractEntity {
   @JoinColumn(name = "USER_ID")
   private String ownerId;
 
-  public Workspace(String name) {
+  public Workspace(String name, String ownerId) {
     this.name = name;
+    this.ownerId = ownerId;
   }
 
   public String getName() {

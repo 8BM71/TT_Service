@@ -11,5 +11,4 @@ import java.util.Optional;
 @RepositoryRestResource(exported = false)
 public interface TimeEntryRepository extends JpaRepository<TimeEntry, String> {
   Optional<TimeEntry> findByTask(Task t);
-  Collection<TimeEntry> findAllByTask(Task p);
 }

@@ -9,6 +9,6 @@ import java.util.Optional;
 
 @RepositoryRestResource(exported = false)
 public interface WorkspaceRepository extends JpaRepository<Workspace, String> {
-  Optional<Workspace> findByOwnerId(String ownerId);
+  Optional<Workspace> findByOwnerIdAndName(String ownerId, String name);
   Collection<Workspace> findAllByOwnerId(String ownerId);
 }
