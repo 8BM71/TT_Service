@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "USERS")
+@Table(name = "USER")
 public class User extends AbstractEntity {
 
   private static final long serialVersionUID = 6922279983192374791L;

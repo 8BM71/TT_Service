@@ -21,7 +21,6 @@ class AbstractEntity implements Serializable {
   @Column (length = 32)
   private String id;
 
-  @Temporal(TemporalType.DATE)
   @Column(name = "CRDATE")
   private LocalDate creationDate;
 
