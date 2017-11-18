@@ -38,7 +38,7 @@ public class WorkspaceService {
     return workspaceRepository.findAllByOwnerId(ownerId);
   }
 
-  public Optional<Workspace> getWorkspaceByOwnerIdAndName(String ownerId, String id) {
+  public Optional<Workspace> getWorkspaceByOwnerIdAndId(String ownerId, String id) {
     Objects.requireNonNull(ownerId);
     Objects.requireNonNull(id);
 
