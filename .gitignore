@@ -2,8 +2,5 @@
 *.iml
 
 .gradle/
-gradle/
 build/
 .gradletasknamecache
-gradlew
-gradlew.bat
