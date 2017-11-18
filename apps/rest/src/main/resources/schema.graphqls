@@ -1,0 +1,14 @@
+schema {
+  query: Query
+}
+
+type Query {
+  workspace(id: String!, ownerId: String!) : Workspace
+}
+
+type Workspace {
+  id: String!
+  crdate: String!
+  name: String
+  ownerId: String!
+}
