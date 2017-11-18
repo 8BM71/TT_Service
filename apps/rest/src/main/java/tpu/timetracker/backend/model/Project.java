@@ -8,7 +8,7 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "PROJECT")
-public class Project extends AbstractEntity {
+final public class Project extends AbstractEntity {
 
   private static final long serialVersionUID = -319754945356826471L;
 
@@ -23,6 +23,8 @@ public class Project extends AbstractEntity {
     this.workspace = ws;
     this.name = name;
   }
+
+  protected Project() {}
 
   public String getName() {
     return name;

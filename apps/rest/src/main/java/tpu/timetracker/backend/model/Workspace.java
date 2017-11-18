@@ -7,7 +7,7 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "WORSPACE")
-public class Workspace extends AbstractEntity {
+final public class Workspace extends AbstractEntity {
 
   private static final long serialVersionUID = -6954901766752322592L;
 
@@ -16,6 +16,8 @@ public class Workspace extends AbstractEntity {
 
   @JoinColumn(name = "USER_ID")
   private String ownerId;
+
+  protected Workspace() {}
 
   public Workspace(String name, String ownerId) {
     this.name = name;

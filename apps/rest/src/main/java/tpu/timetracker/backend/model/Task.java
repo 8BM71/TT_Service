@@ -5,7 +5,7 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "TASK")
-public class Task extends AbstractEntity {
+final public class Task extends AbstractEntity {
 
   private static final long serialVersionUID = -4968820022482424460L;
 
@@ -25,6 +25,8 @@ public class Task extends AbstractEntity {
   public Task(Project project) {
     this.project = project;
   }
+
+  protected Task() {}
 
   public TimeEntry getTimeEntry() {
     return timeEntry;

@@ -5,7 +5,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "TIMEENTRY")
-public class TimeEntry extends AbstractEntity {
+final public class TimeEntry extends AbstractEntity {
 
   private static final long serialVersionUID = 3527966648186016367L;
 
@@ -21,6 +21,8 @@ public class TimeEntry extends AbstractEntity {
   @OneToOne
   @JoinColumn(name = "TASK_ID")
   private Task task;
+
+  protected TimeEntry() {}
 
   public TimeEntry(Task t) {
     this.task = t;
