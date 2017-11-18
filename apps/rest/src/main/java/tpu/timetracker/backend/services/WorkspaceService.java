@@ -38,17 +38,17 @@ public class WorkspaceService {
     return workspaceRepository.findAllByOwnerId(ownerId);
   }
 
-  public Optional<Workspace> getWorkspaceByOwnerIdAndName(String ownerId, String name) {
+  public Optional<Workspace> getWorkspaceByOwnerIdAndName(String ownerId, String id) {
     Objects.requireNonNull(ownerId);
-    Objects.requireNonNull(name);
+    Objects.requireNonNull(id);
 
-    return workspaceRepository.findByOwnerIdAndName(ownerId, name);
+    return workspaceRepository.findByOwnerIdAndId(ownerId, id);
   }
 
-  public boolean workspaceExist(String ownerId, String name) {
+  public boolean workspaceExist(String ownerId, String id) {
     Objects.requireNonNull(ownerId);
-    Objects.requireNonNull(name);
+    Objects.requireNonNull(id);
 
-    return workspaceRepository.findByOwnerIdAndName(ownerId, name).isPresent();
+    return workspaceRepository.findByOwnerIdAndId(ownerId, id).isPresent();
   }
 }

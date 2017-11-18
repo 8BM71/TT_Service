@@ -29,4 +29,8 @@ public class Workspace extends AbstractEntity {
   public void setName(String name) {
     this.name = name;
   }
+
+  public String getOwnerId() {
+    return ownerId;
+  }
 }

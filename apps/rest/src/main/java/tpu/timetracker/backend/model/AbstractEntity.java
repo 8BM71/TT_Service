@@ -17,8 +17,7 @@ class AbstractEntity implements Serializable {
   private static final Logger log = LoggerFactory.getLogger(AbstractEntity.class);
 
   @Id
-  @GeneratedValue
-  @Column (length = 32)
+  @Column (length = 36)
   private String id;
 
   @Column(name = "CRDATE")
