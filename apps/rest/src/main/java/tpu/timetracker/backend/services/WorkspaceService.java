@@ -16,15 +16,15 @@ public class WorkspaceService {
   @Autowired
   private WorkspaceRepository workspaceRepository;
 
-  public Optional<Workspace> createWorkspace(User owner, String name) {
-    Objects.requireNonNull(owner);
+  public Optional<Workspace> createWorkspace(String ownerId, String name) {
+    Objects.requireNonNull(ownerId);
     Objects.requireNonNull(name);
 
-    if (workspaceExist(owner.getId(), name)) {
+    if (workspaceExist(ownerId, name)) {
       throw new SecurityException(String.format("Workspace with that name: %s already exist!", name));
     }
 
-    Workspace ws = new Workspace(name, owner.getId());
+    Workspace ws = new Workspace(name, ownerId);
     return Optional.of(workspaceRepository.save(ws));
   }
 

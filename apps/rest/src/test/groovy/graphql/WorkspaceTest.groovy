@@ -34,7 +34,7 @@ class WorkspaceTest extends Specification {
 
   def "createWorkspace test"() {
     when:
-    def ws = workspaceService.createWorkspace(user, "testWorkspace").get()
+    def ws = workspaceService.createWorkspace(user.getId(), "testWorkspace").get()
 
     then:
     def query = "{workspace(id: \"${ws.id}\", ownerId: \"${user.id}\") {name}}"
