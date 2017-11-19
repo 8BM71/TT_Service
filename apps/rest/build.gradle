@@ -8,6 +8,7 @@ buildscript {
 }
 
 apply plugin: 'java'
+apply plugin: 'groovy'
 apply plugin: 'org.springframework.boot'
 
 repositories {
@@ -28,4 +29,10 @@ dependencies {
 	testCompile "org.spockframework:spock-spring:${spockSpringVersion}"
 	testCompile "org.spockframework:spock-core:${spockSpringVersion}"
 	testCompile "org.springframework.boot:spring-boot-starter-test"
+}
+
+clean.doLast {
+	file(System.getProperty('user.home')).eachFileMatch(~/timeTracker-test.*/) {
+		it.delete()
+	}
 }

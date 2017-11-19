@@ -22,7 +22,11 @@ class UserTest extends Specification {
   GraphQL graphQL
 
   def setup() {
-    user = userService.createUser("username", "email").get()
+    if (userService.userExist("email")) {
+      user = userService.getUserByEmail("email").get()
+    } else {
+      user = userService.createUser("username", "email").get()
+    }
 
     GraphQLSchema schema = RuntimeWiringBinder.generateSchema()
     graphQL = GraphQL.newGraphQL(schema).build()

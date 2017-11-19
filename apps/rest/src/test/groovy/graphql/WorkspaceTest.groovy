@@ -26,7 +26,11 @@ class WorkspaceTest extends Specification {
   GraphQL graphQL
 
   def setup() {
-    user = userService.createUser("username", "email").get()
+    if (userService.userExist("email")) {
+      user = userService.getUserByEmail("email").get()
+    } else {
+      user = userService.createUser("username", "email").get()
+    }
 
     GraphQLSchema schema = RuntimeWiringBinder.generateSchema()
     graphQL = GraphQL.newGraphQL(schema).build()
@@ -71,16 +75,5 @@ class WorkspaceTest extends Specification {
     }
 
     r*.ownerId.unique()[0] == user.id
-  }
-
-  def "get all fields of ws"() {
-    given:
-    def ws = workspaceService.createWorkspace(user.id, "testWorkspace").get()
-    def query = """ {
-        workspace(id: "${ws.id}", ownerId: "${user.id}")
-      }
-    """
-    def er = graphQL.execute(query)
-    println er
   }
 }
