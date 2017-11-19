@@ -4,6 +4,8 @@ schema {
 
 type Query {
   workspace(id: String!, ownerId: String!) : Workspace
+  workspaces(ownerId: String!) : [Workspace]!
+  user(id: String!) : User
 }
 
 type Workspace {
@@ -11,4 +13,37 @@ type Workspace {
   crdate: String!
   name: String
   ownerId: String!
+}
+
+type Project {
+  id: String!
+  crdate: String!
+  name: String!
+  workspace: Workspace!
+}
+
+type Task {
+  id: String!
+  crdate: String!
+  description: String
+  name: String
+  project: Project!
+  timeEntry: TimeEntry!
+}
+
+type TimeEntry {
+  id: String!
+  crdate: String!
+  duration: Long
+  endDate: String
+  startDate: String
+  task: Task!
+}
+
+type User {
+  id: String!
+  crdate: String!
+  username: String!
+  name: String
+  email: String!
 }

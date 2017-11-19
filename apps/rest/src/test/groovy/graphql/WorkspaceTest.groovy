@@ -32,16 +32,55 @@ class WorkspaceTest extends Specification {
     graphQL = GraphQL.newGraphQL(schema).build()
   }
 
-  def "createWorkspace test"() {
+  def "get existing workspace"() {
     when:
     def ws = workspaceService.createWorkspace(user.getId(), "testWorkspace").get()
 
     then:
-    def query = "{workspace(id: \"${ws.id}\", ownerId: \"${user.id}\") {name}}"
+    def query = "{workspace(id: \"${ws.id}\", ownerId: \"${user.id}\") {name id crdate ownerId}}"
     ExecutionResult result = graphQL.execute(query)
+    def resultWs = result.data.workspace
 
     expect:
     result.errors.size() == 0
-    result.data.workspace.name == ws.getName()
+    resultWs.name == ws.name
+    resultWs.id == ws.id
+    resultWs.ownerId == user.id
+    resultWs.crdate == ws.creationDate as String
+  }
+
+  def "get all workspaces by ownerId"() {
+    when:
+    def wsList = []
+    5.times { it ->
+      wsList << workspaceService.createWorkspace(user.id, "ws$it")
+    }
+
+    then:
+    def query = """
+      {
+        workspaces(ownerId: \"${user.id}\") {name ownerId}
+      }
+    """
+    ExecutionResult er = graphQL.execute(query)
+    List r = er.data.workspaces
+
+    expect:
+    5.times { index ->
+      r[index].name == wsList[index].get().name
+    }
+
+    r*.ownerId.unique()[0] == user.id
+  }
+
+  def "get all fields of ws"() {
+    given:
+    def ws = workspaceService.createWorkspace(user.id, "testWorkspace").get()
+    def query = """ {
+        workspace(id: "${ws.id}", ownerId: "${user.id}")
+      }
+    """
+    def er = graphQL.execute(query)
+    println er
   }
 }

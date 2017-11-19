@@ -47,6 +47,10 @@ public class UserService {
     return userRepository.findByUsername(username);
   }
 
+  public Optional<User> getUserById(String id) {
+    return Optional.ofNullable(userRepository.findOne(id));
+  }
+
   public boolean userExist(String email) {
     return userRepository.findByEmail(email).isPresent();
   }

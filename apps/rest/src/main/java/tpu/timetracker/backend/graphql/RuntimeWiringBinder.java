@@ -14,8 +14,11 @@ public class RuntimeWiringBinder {
   private static RuntimeWiring wiring = RuntimeWiring.newRuntimeWiring()
       .type("Query", type ->
           type
-              .dataFetcher("workspace", Fetchers.workspaceDataFetcher))
+              .dataFetcher("workspace", Fetchers.workspaceDataFetcher)
+              .dataFetcher("workspaces", Fetchers.workspaceDataFetcher)
+              .dataFetcher("user", Fetchers.userDataFetcher))
       .type("Workspace", Fetchers::workspaceFetcherBuilder)
+      .type("User", Fetchers::userFetcherBuilder)
       .build();
 
   public static GraphQLSchema generateSchema() {
