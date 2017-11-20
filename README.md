@@ -1,4 +1,4 @@
-# TimeTracker backend
+# TimeTracker backend [![Build Status](https://travis-ci.org/8VM71/TT_backend.svg?branch=develop)](https://travis-ci.org/8VM71/TT_backend)
 Backend implementation based on Spring Framework for course project - TimeTracker
 
 # Requirements
