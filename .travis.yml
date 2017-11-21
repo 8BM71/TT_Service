@@ -3,9 +3,13 @@ language: java
 jdk:
   - oraclejdk8
 
-install:
-  - gradle assemble
+install: true
+
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
 
 script:
-  - gradle check
+  - gradle clean
   - gradle build
