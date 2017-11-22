@@ -1,4 +1,4 @@
-# TimeTracker backend [![Build Status](https://travis-ci.org/8VM71/TT_backend.svg?branch=develop)](https://travis-ci.org/8VM71/TT_backend)
+# TimeTracker backend [![Build Status](https://travis-ci.org/8VM71/TT_backend.svg?branch=develop)](https://travis-ci.org/8VM71/TT_backend) [![codecov](https://codecov.io/gh/8VM71/TT_backend/branch/develop/graph/badge.svg)](https://codecov.io/gh/8VM71/TT_backend) [![BCH compliance](https://bettercodehub.com/edge/badge/8VM71/TT_backend?branch=develop)](https://bettercodehub.com/)
 Backend implementation based on Spring Framework for course project - TimeTracker
 
 # Requirements
