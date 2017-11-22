@@ -8,9 +8,8 @@ Backend implementation based on Spring Framework for course project - TimeTracke
 * [Gradle](https://gradle.org/install/)  
 
 # How to
-* build project if you have not Gradle binaries 
+* build project if you don't have Gradle
 ```bash
-gradlew wrapper
 gradlew build
 ```
 * run backend on preconfigured settings
