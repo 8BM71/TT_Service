@@ -1,8 +1,0 @@
-afterEvaluate {
-  def source = '1.8'
-  if (plugins.findPlugin('java')) {
-    sourceCompatibility = source
-    targetCompatibility = source
-    [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-  }
-}
