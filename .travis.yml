@@ -1,7 +1,15 @@
+sudo: required
+
+services:
+  - docker
+
 language: java
 
 jdk:
   - oraclejdk8
+
+before_install:
+  - chmod +x gradlew
 
 install: true
 
@@ -11,5 +19,10 @@ cache:
     - $HOME/.gradle/wrapper/
 
 script:
-  - gradle clean
-  - gradle build
+  - ./gradlew clean
+  - ./gradlew test
+  - ./gradlew assemble
+
+after_success:
+  - sh .travis/deploy_dockerhub.sh
+  - bash <(curl -s https://codecov.io/bash)
