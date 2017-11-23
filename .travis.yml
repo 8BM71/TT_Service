@@ -20,7 +20,7 @@ cache:
 
 script:
   - ./gradlew clean
-  - ./gradlew test
+  - ./gradlew test --rerun-tasks
   - ./gradlew assemble
 
 after_success:
