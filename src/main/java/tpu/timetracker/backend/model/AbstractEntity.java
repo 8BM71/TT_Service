@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @MappedSuperclass
 @EntityListeners(AbstractEntity.AbstractEntityListener.class)
-class AbstractEntity implements Serializable {
+public class AbstractEntity implements Serializable {
 
   private static final long serialVersionUID = -6229400610384798507L;
 

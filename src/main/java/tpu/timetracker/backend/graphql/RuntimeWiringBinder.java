@@ -12,13 +12,12 @@ import java.io.InputStreamReader;
 public class RuntimeWiringBinder {
 
   private static RuntimeWiring wiring = RuntimeWiring.newRuntimeWiring()
-      .type("Query", type ->
-          type
-              .dataFetcher("workspace", Fetchers.workspaceDataFetcher)
-              .dataFetcher("workspaces", Fetchers.workspaceDataFetcher)
-              .dataFetcher("user", Fetchers.userDataFetcher))
-      .type("Workspace", Fetchers::workspaceFetcherBuilder)
-      .type("User", Fetchers::userFetcherBuilder)
+      .type(RuntimeWiringTypes.queryTypeWiring)
+      .type(RuntimeWiringTypes.workspaceTypeWiring)
+      .type(RuntimeWiringTypes.userTypeWiring)
+      .type(RuntimeWiringTypes.projectTypeWiring)
+      .type(RuntimeWiringTypes.taskTypeWiring)
+      .type(RuntimeWiringTypes.timeEntryTypeWiring)
       .build();
 
   public static GraphQLSchema generateSchema() {
