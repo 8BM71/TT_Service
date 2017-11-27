@@ -3,9 +3,13 @@ package tpu.timetracker.backend.model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.EntityListeners;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.PrePersist;
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.UUID;
 
 @MappedSuperclass
@@ -21,11 +25,11 @@ public class AbstractEntity implements Serializable {
   private String id;
 
   @Column(name = "CRDATE")
-  private LocalDate creationDate;
+  private String creationDate;
 
   @PrePersist
   void creationDate() {
-    this.creationDate = LocalDate.now();
+    this.creationDate = String.valueOf(new Date().getTime());
   }
 
   String uid() {
@@ -41,7 +45,7 @@ public class AbstractEntity implements Serializable {
     return id;
   }
 
-  public LocalDate getCreationDate() {
+  public String getCreationDate() {
     return creationDate;
   }
 
