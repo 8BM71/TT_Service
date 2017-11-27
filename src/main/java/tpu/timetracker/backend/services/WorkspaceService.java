@@ -3,7 +3,6 @@ package tpu.timetracker.backend.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tpu.timetracker.backend.jpa.WorkspaceRepository;
-import tpu.timetracker.backend.model.User;
 import tpu.timetracker.backend.model.Workspace;
 
 import java.util.Collection;
@@ -33,9 +32,27 @@ public class WorkspaceService {
     workspaceRepository.delete(ws);
   }
 
+  public void deleteWorkspace(String wsId) {
+    Objects.requireNonNull(wsId);
+    workspaceRepository.delete(wsId);
+  }
+
   public Collection<Workspace> getAllOwnerWorkspaces(String ownerId) {
     Objects.requireNonNull(ownerId);
     return workspaceRepository.findAllByOwnerId(ownerId);
+  }
+
+  public Optional<Workspace> getWorkspaceByOwnerIdAndName(String ownerId, String name) {
+    Objects.requireNonNull(ownerId);
+    Objects.requireNonNull(name);
+
+    return workspaceRepository.findByOwnerIdAndName(ownerId, name);
+  }
+
+  public Optional<Workspace> getWorkspaceById(String id) {
+    Objects.requireNonNull(id);
+
+    return Optional.ofNullable(workspaceRepository.findOne(id));
   }
 
   public Optional<Workspace> getWorkspaceByOwnerIdAndId(String ownerId, String id) {
@@ -45,10 +62,10 @@ public class WorkspaceService {
     return workspaceRepository.findByOwnerIdAndId(ownerId, id);
   }
 
-  public boolean workspaceExist(String ownerId, String id) {
+  public boolean workspaceExist(String ownerId, String name) {
     Objects.requireNonNull(ownerId);
-    Objects.requireNonNull(id);
+    Objects.requireNonNull(name);
 
-    return workspaceRepository.findByOwnerIdAndId(ownerId, id).isPresent();
+    return workspaceRepository.findByOwnerIdAndName(ownerId, name).isPresent();
   }
 }
