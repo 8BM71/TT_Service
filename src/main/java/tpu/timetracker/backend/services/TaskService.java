@@ -16,19 +16,6 @@ public class TaskService {
   @Autowired
   private TaskRepository taskRepository;
 
-  public Optional<Task> createTask(Project p, String name) {
-    Objects.requireNonNull(p);
-    Objects.requireNonNull(name);
-
-    if (taskExistByName(p, name)) {
-      throw new SecurityException(String.format("Task with that name: %s already exist!", name));
-    }
-
-    Task task = new Task(p);
-    task.setName(name);
-    return Optional.of(taskRepository.save(task));
-  }
-
   public Optional<Task> createTask(Project p) {
     Objects.requireNonNull(p);
 
@@ -41,30 +28,23 @@ public class TaskService {
     taskRepository.delete(t);
   }
 
+  public void deleteTask(String id) {
+    Objects.requireNonNull(id);
+    taskRepository.delete(id);
+  }
+
   public Collection<Task> getAllProjectTasks(Project p) {
     Objects.requireNonNull(p);
 
     return taskRepository.findAllByProject(p);
   }
 
-  public Optional<Task> getTaskByProjectAndName(Project p, String name) {
-    Objects.requireNonNull(p);
-    Objects.requireNonNull(name);
-
-    return taskRepository.findByProjectAndName(p, name);
-  }
-
-  public Optional<Task> taskExistById(Project p, String id) {
-    Objects.requireNonNull(p);
+  public Optional<Task> getTaskById(String id) {
     Objects.requireNonNull(id);
-
-    return taskRepository.findByProjectAndId(p, id);
+    return Optional.ofNullable(taskRepository.findOne(id));
   }
 
-  public boolean taskExistByName(Project p, String name) {
-    Objects.requireNonNull(p);
-    Objects.requireNonNull(name);
-
-    return taskRepository.findByProjectAndName(p, name).isPresent();
+  public boolean taskExist(String id) {
+    return getTaskById(id).isPresent();
   }
 }

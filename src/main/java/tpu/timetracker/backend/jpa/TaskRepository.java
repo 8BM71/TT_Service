@@ -10,7 +10,6 @@ import java.util.Optional;
 
 @RepositoryRestResource(exported = false)
 public interface TaskRepository extends JpaRepository<Task, String> {
-  Optional<Task> findByProjectAndName(Project p, String name);
   Optional<Task> findByProjectAndId(Project p, String id);
   Collection<Task> findAllByProject(Project p);
 }
