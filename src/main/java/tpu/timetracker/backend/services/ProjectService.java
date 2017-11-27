@@ -33,6 +33,16 @@ public class ProjectService {
     projectRepository.delete(p);
   }
 
+  public void deleteProject(String projId) {
+    Objects.requireNonNull(projId);
+    projectRepository.delete(projId);
+  }
+
+  public Optional<Project> getProjectById(String projId) {
+    Objects.requireNonNull(projId);
+    return Optional.ofNullable(projectRepository.findOne(projId));
+  }
+
   public Optional<Project> getProjectByWorkspaceAndName(Workspace ws, String name) {
     Objects.requireNonNull(ws);
     Objects.requireNonNull(name);
@@ -43,6 +53,11 @@ public class ProjectService {
   public Collection<Project> getAllWorkspaceProjects(Workspace ws) {
     Objects.requireNonNull(ws);
     return projectRepository.findAllByWorkspace(ws);
+  }
+
+  public boolean projectExist(String projId) {
+    Objects.requireNonNull(projId);
+    return getProjectById(projId).isPresent();
   }
 
   public boolean projectExist(Workspace ws, String name) {
