@@ -18,14 +18,23 @@ final public class TimeEntry extends AbstractEntity {
   @Temporal(TemporalType.DATE)
   private Date endDate;
 
-  @OneToOne
-  @JoinColumn(name = "TASK_ID")
-  private Task task;
+  @JoinColumn(name = "OWNER_ID")
+  private String ownerId;
+
+  @ManyToOne
+  @JoinColumn(name = "WORKSPACE_ID")
+  private Workspace workspace;
+
+  @ManyToOne
+  @JoinColumn(name = "PROJECT_ID")
+  private Project project;
 
   protected TimeEntry() {}
 
   public TimeEntry(Task t) {
-    this.task = t;
+    this.project = t.getProject();
+    this.workspace = this.project.getWorkspace();
+    this.ownerId = this.workspace.getOwnerId();
   }
 
   public Long getDuration() {
@@ -52,7 +61,15 @@ final public class TimeEntry extends AbstractEntity {
     this.endDate = endDate;
   }
 
-  public Task getTask() {
-    return task;
+  public String getOwnerId() {
+    return ownerId;
+  }
+
+  public Workspace getWorkspace() {
+    return workspace;
+  }
+
+  public Project getProject() {
+    return project;
   }
 }

@@ -16,6 +16,7 @@ final public class Task extends AbstractEntity {
   @JoinColumn(name = "PROJECT_ID")
   private Project project;
 
+  @OneToOne
   @JoinColumn(name = "TIMEENTRY_ID")
   private TimeEntry timeEntry;
 
