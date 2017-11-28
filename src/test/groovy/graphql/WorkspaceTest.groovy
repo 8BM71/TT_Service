@@ -156,4 +156,12 @@ class WorkspaceTest extends Specification {
     re.errors.size() == 0
     re.data.workspace.project.task.id == t.id
   }
+
+  def "workspace assertion test"() {
+    when:
+    def ws = workspaceService.createWorkspace(user.id, "thisIsMyWs")
+
+    then:
+    Assert.assertNotNull(ws)
+  }
 }
