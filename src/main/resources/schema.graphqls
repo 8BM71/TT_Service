@@ -13,13 +13,20 @@ type Workspace {
   crdate: String!
   name: String
   ownerId: String!
+
+  project(id: String!): Project
+  projects: [Project]
+  timeEntries: [TimeEntry]
 }
 
 type Project {
   id: String!
   crdate: String!
   name: String!
-  workspace: Workspace!
+
+  task(id: String!): Task
+  tasks: [Task]
+  timeEntries: [TimeEntry]
 }
 
 type Task {
@@ -27,7 +34,6 @@ type Task {
   crdate: String!
   description: String
   name: String
-  project: Project!
   timeEntry: TimeEntry!
 }
 
@@ -37,7 +43,6 @@ type TimeEntry {
   duration: Long
   endDate: String
   startDate: String
-  task: Task!
 }
 
 type User {

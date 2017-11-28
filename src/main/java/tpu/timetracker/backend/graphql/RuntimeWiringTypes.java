@@ -29,7 +29,10 @@ class RuntimeWiringTypes {
       "Workspace", builder ->
           builder
               .dataFetcher("name", env -> env.<Workspace>getSource().getName())
-              .dataFetcher("ownerId", env -> env.<Workspace>getSource().getOwnerId()));
+              .dataFetcher("ownerId", env -> env.<Workspace>getSource().getOwnerId())
+              .dataFetcher("project", QueryFetchers.projectDataFetcher)
+              .dataFetcher("projects", QueryFetchers.projectsDataFetcher)
+              .dataFetcher("timeEntries", QueryFetchers.timeEntriesDataFetcher));
 
   static TypeRuntimeWiring userTypeWiring = CustomTypeRuntimeWiring.newTypeWiring(
       "User", builder ->
@@ -42,14 +45,15 @@ class RuntimeWiringTypes {
       "Project", builder ->
           builder
               .dataFetcher("name", env -> env.<Project>getSource().getName())
-              .dataFetcher("workspace", env -> env.<Project>getSource().getWorkspace()));
+              .dataFetcher("task", QueryFetchers.taskDataFetcher)
+              .dataFetcher("tasks", QueryFetchers.tasksDataFetcher)
+              .dataFetcher("timeEntries", QueryFetchers.timeEntriesDataFetcher));
 
   static TypeRuntimeWiring taskTypeWiring = CustomTypeRuntimeWiring.newTypeWiring(
       "Task", builder ->
           builder
               .dataFetcher("description", env -> env.<Task>getSource().getDescription())
               .dataFetcher("name", env -> env.<Task>getSource().getName())
-              .dataFetcher("project", env -> env.<Task>getSource().getProject())
               .dataFetcher("timeEntry", env -> env.<Task>getSource().getTimeEntry()));
 
   static TypeRuntimeWiring timeEntryTypeWiring = CustomTypeRuntimeWiring.newTypeWiring(
@@ -62,7 +66,7 @@ class RuntimeWiringTypes {
   static TypeRuntimeWiring queryTypeWiring = TypeRuntimeWiring.newTypeWiring(
       "Query", builder ->
           builder
-              .dataFetcher("workspace", Fetchers.workspaceDataFetcher)
-              .dataFetcher("workspaces", Fetchers.workspaceDataFetcher)
-              .dataFetcher("user", Fetchers.userDataFetcher));
+              .dataFetcher("workspace", QueryFetchers.workspaceDataFetcher)
+              .dataFetcher("workspaces", QueryFetchers.workspaceDataFetcher)
+              .dataFetcher("user", QueryFetchers.userDataFetcher));
 }
