@@ -8,6 +8,8 @@ import spock.lang.Specification
 import tpu.timetracker.backend.BackendApplication
 import tpu.timetracker.backend.graphql.RuntimeWiringBinder
 import tpu.timetracker.backend.model.User
+import tpu.timetracker.backend.services.ProjectService
+import tpu.timetracker.backend.services.TaskService
 import tpu.timetracker.backend.services.UserService
 import tpu.timetracker.backend.services.WorkspaceService
 
@@ -17,6 +19,12 @@ class WorkspaceTest extends Specification {
 
   @Autowired
   WorkspaceService workspaceService
+
+  @Autowired
+  ProjectService projectService
+
+  @Autowired
+  TaskService taskService
 
   @Autowired
   UserService userService
@@ -75,5 +83,77 @@ class WorkspaceTest extends Specification {
     }
 
     r*.ownerId.unique()[0] == user.id
+  }
+
+  def "get project from workspace"() {
+    given:
+    def ws = workspaceService.createWorkspace(user.getId(), "3testWorkspace").get()
+    def proj = projectService.createProject(ws, "myProject").get()
+    def query = """
+      {
+        workspace(id: \"${ws.id}\", ownerId: \"${user.id}\") {
+          name
+          project(id: \"${proj.id}\") {
+            id
+            name
+          }
+        }
+      }
+    """
+    def re = graphQL.execute(query)
+
+    expect:
+    re.errors.size() == 0
+    re.data.workspace.name == ws.name
+    re.data.workspace.project.name == proj.name
+    re.data.workspace.project.id == proj.id
+  }
+
+  def "get many projects from workspace"() {
+    given:
+    def ws = workspaceService.createWorkspace(user.getId(), "4testWorkspace").get()
+    List projs = []
+    10.times { i ->
+      projs << projectService.createProject(ws, "proj$i").get()
+    }
+    def query = """
+      {
+        workspace(id: \"${ws.id}\", ownerId: \"${user.id}\") {
+          projects {
+            name
+          }
+        }
+      }
+    """
+    def re = graphQL.execute(query)
+
+    expect:
+    re.errors.size() == 0
+    10.times { i ->
+      projs[i].name == re.data.workspace.projects[i].name
+    }
+  }
+
+  def "get many tasks from workspace's project"() {
+    given:
+    def w = workspaceService.createWorkspace(user.getId(), "5testWorkspace").get()
+    def p = projectService.createProject(w, "5myProject").get()
+    def t = taskService.createTask(p).get()
+    def query = """
+      {
+        workspace(id: \"${w.id}\", ownerId: \"${user.id}\") {
+          project(id: \"${p.id}\") {
+            task(id: \"${t.id}\") {
+              id
+            }
+          }
+        }
+      }
+    """
+    def re = graphQL.execute(query)
+
+    expect:
+    re.errors.size() == 0
+    re.data.workspace.project.task.id == t.id
   }
 }
