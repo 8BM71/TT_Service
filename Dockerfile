@@ -1,6 +1,6 @@
 FROM openjdk:8-jdk-alpine
 
-ADD build/libs/TT_backend.jar /app.jar
+ADD build/libs/tputt-backend.jar /app.jar
 
 EXPOSE 8008
 
