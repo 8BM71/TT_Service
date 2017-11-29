@@ -13,6 +13,7 @@ public class RuntimeWiringBinder {
 
   private static RuntimeWiring wiring = RuntimeWiring.newRuntimeWiring()
       .type(RuntimeWiringTypes.queryTypeWiring)
+      .type(RuntimeWiringTypes.mutationTypeWiring)
       .type(RuntimeWiringTypes.workspaceTypeWiring)
       .type(RuntimeWiringTypes.userTypeWiring)
       .type(RuntimeWiringTypes.projectTypeWiring)

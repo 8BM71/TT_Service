@@ -1,5 +1,12 @@
 schema {
   query: Query
+  mutation: Mutations
+}
+
+type Mutations {
+  createWorkspace(name: String!, ownerId: String!): Workspace
+  createProject(wsId: String!, name: String!): Project
+  createTask(projId: String!): Task
 }
 
 type Query {

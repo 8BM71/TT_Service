@@ -69,4 +69,11 @@ class RuntimeWiringTypes {
               .dataFetcher("workspace", QueryFetchers.workspaceDataFetcher)
               .dataFetcher("workspaces", QueryFetchers.workspaceDataFetcher)
               .dataFetcher("user", QueryFetchers.userDataFetcher));
+
+  static TypeRuntimeWiring mutationTypeWiring = TypeRuntimeWiring.newTypeWiring(
+      "Mutations", builder ->
+          builder
+              .dataFetcher("createWorkspace", MutationFetchers.createWorkspace)
+              .dataFetcher("createProject", MutationFetchers.createProject)
+              .dataFetcher("createTask", MutationFetchers.createTask));
 }

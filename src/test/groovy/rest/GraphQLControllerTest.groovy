@@ -46,10 +46,13 @@ class GraphQLControllerTest extends Specification {
 
   def "create workspace"() {
     when:
-    def w = workspaceService.createWorkspace(user.id, "wsname").get()
     def jsonBuilder = new JsonBuilder()
     def root = jsonBuilder (
-      query: """{workspace(id: "${w.id}", ownerId: "${user.id}") {name}}""",
+      query: """ mutation M {
+        createWorkspace(name: "myFirstWsByMutation", ownerId: "${user.id}") {
+          name
+        }
+      }""",
       vars: ""
     )
 
@@ -64,6 +67,6 @@ class GraphQLControllerTest extends Specification {
     expect:
     response.status == HttpStatus.OK.value()
     response.contentType == mediaType as String
-    content.data.workspace.name == w.name
+    content.data.createWorkspace.name == "myFirstWsByMutation"
   }
 }
