@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import tpu.timetracker.backend.jpa.TaskRepository;
 import tpu.timetracker.backend.model.Project;
 import tpu.timetracker.backend.model.Task;
+import tpu.timetracker.backend.model.TimeEntry;
 
 import java.util.Collection;
 import java.util.Objects;
@@ -20,6 +21,8 @@ public class TaskService {
     Objects.requireNonNull(p);
 
     Task task = new Task(p);
+    TimeEntry timeEntry = new TimeEntry(task);
+    task.setTimeEntry(timeEntry);
     return Optional.of(taskRepository.save(task));
   }
 

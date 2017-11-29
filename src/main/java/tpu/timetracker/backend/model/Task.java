@@ -1,6 +1,12 @@
 package tpu.timetracker.backend.model;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -16,7 +22,7 @@ final public class Task extends AbstractEntity {
   @JoinColumn(name = "PROJECT_ID")
   private Project project;
 
-  @OneToOne
+  @OneToOne(cascade = {CascadeType.ALL})
   @JoinColumn(name = "TIMEENTRY_ID")
   private TimeEntry timeEntry;
 
