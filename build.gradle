@@ -4,6 +4,7 @@ buildscript {
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath("pl.allegro.tech.build:axion-release-plugin:$releasePluginVersion")
 	}
 }
 
@@ -11,10 +12,20 @@ apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'jacoco'
+apply plugin: 'pl.allegro.tech.build.axion-release'
 
 repositories {
 	mavenCentral()
 	jcenter()
+}
+
+ext {
+	getGitRevision = {
+		File dir = project.getProjectDir()
+		def command = """git rev-list HEAD --count ."""
+		def text = command.execute(null, dir).in.text.trim().toInteger()
+		return text
+	}
 }
 
 dependencies {
@@ -63,3 +74,26 @@ jacocoTestReport {
 		html.enabled = false
 	}
 }
+
+scmVersion {
+	repository {
+		type = 'git'
+		directory = project.rootProject.file('./')
+		remote = 'origin'
+	}
+
+	tag {
+		prefix = 'tpu-tt'
+		versionSeparator = '-'
+	}
+
+	hooks {
+		def indexHTML = sourceSets.main.resources.find {it.name == "index.html"}
+
+		pre 'fileUpdate', [file: indexHTML.path, pattern: {v,p -> /(version:) (.*)/}, replacement: {v, p -> "\$1 $v.${getGitRevision()}"}]
+		pre 'fileUpdate', [file: indexHTML.path, pattern: {v,p -> /(build release:) (.*)/}, replacement: {v, p -> "\$1 ${new Date()}"}]
+		pre 'commit'
+	}
+}
+
+project.version = scmVersion.version
