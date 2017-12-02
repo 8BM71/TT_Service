@@ -25,4 +25,5 @@ script:
 
 after_success:
   - sh .travis/deploy_dockerhub.sh
+  - if [ -e ./gradlew ]; then ./gradlew jacocoTestReport;else gradle jacocoTestReport;fi
   - bash <(curl -s https://codecov.io/bash)
