@@ -68,6 +68,11 @@ test {
 	}
 }
 
+jar {
+	baseName = "tputt-backend"
+	version = ""
+}
+
 jacocoTestReport {
 	reports {
 		xml.enabled = true
