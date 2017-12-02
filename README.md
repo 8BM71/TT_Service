@@ -1,5 +1,5 @@
 # TimeTracker backend
-[![Build Status](https://travis-ci.org/8VM71/tputt-backend.svg?branch=develop)](https://travis-ci.org/8VM71/tputt-backend) [![codecov](https://codecov.io/gh/8VM71/tputt-backend/branch/develop/graph/badge.svg)](https://codecov.io/gh/8VM71/tputt-backend) [![BCH compliance](https://bettercodehub.com/edge/badge/8VM71/tputt-backend?branch=develop)](https://bettercodehub.com/)
+[![Build Status](https://travis-ci.org/8VM71/tputt-backend.svg?branch=develop)](https://travis-ci.org/8VM71/tputt-backend) [![codecov](https://codecov.io/gh/8VM71/tputt-backend/branch/develop/graph/badge.svg)](https://codecov.io/gh/8VM71/tputt-backend)
 
 Backend implementation based on Spring Framework for course project - TimeTracker
 
