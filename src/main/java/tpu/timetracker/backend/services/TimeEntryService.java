@@ -71,4 +71,10 @@ public class TimeEntryService {
 
     return timeEntryRepository.findTimeEntryById(id);
   }
+
+  public boolean timeEntryExist(String id) {
+    Objects.requireNonNull(id);
+
+    return getTimeEntryById(id).isPresent();
+  }
 }

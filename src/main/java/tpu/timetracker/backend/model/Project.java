@@ -1,5 +1,8 @@
 package tpu.timetracker.backend.model;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -16,6 +19,7 @@ final public class Project extends AbstractEntity {
   private String name;
 
   @ManyToOne
+  @OnDelete(action = OnDeleteAction.CASCADE)
   @JoinColumn(name = "WORKSPACE_ID")
   private Workspace workspace;
 

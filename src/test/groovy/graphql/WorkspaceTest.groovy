@@ -10,6 +10,7 @@ import tpu.timetracker.backend.graphql.RuntimeWiringBinder
 import tpu.timetracker.backend.model.User
 import tpu.timetracker.backend.services.ProjectService
 import tpu.timetracker.backend.services.TaskService
+import tpu.timetracker.backend.services.TimeEntryService
 import tpu.timetracker.backend.services.UserService
 import tpu.timetracker.backend.services.WorkspaceService
 
@@ -28,6 +29,9 @@ class WorkspaceTest extends Specification {
 
   @Autowired
   UserService userService
+
+  @Autowired
+  TimeEntryService timeEntryService
 
   User user
 
@@ -163,5 +167,41 @@ class WorkspaceTest extends Specification {
 
     then:
     Assert.assertNotNull(ws)
+  }
+
+  def "remove workspace and cascade removing all embedded entities"() {
+    when:
+    def w = workspaceService.createWorkspace(user.id, "cascadeTest").get()
+    def p = projectService.createProject(w, "cascadeTest").get()
+    def t = taskService.createTask(p).get()
+    def te = timeEntryService.createTimeEntry(t).get()
+    def query = """
+      {
+        workspace(id: "${w.id}", ownerId: "${user.id}") {
+          name
+          project(id: "${p.id}") {
+            crdate
+            task(id: "${t.id}") {
+              timeEntry(id: "${te.id}") {
+                endDate
+              }
+            }
+          }
+        }
+      }
+    """
+    def re = graphQL.execute(query)
+
+    then:
+    re.errors.size() == 0
+
+    when:
+    workspaceService.deleteWorkspace(w)
+
+    then:
+    ! workspaceService.workspaceExist(user.id, w.name)
+    ! projectService.projectExist(p.id)
+    ! taskService.taskExist(t.id)
+    ! timeEntryService.timeEntryExist(te.id)
   }
 }
