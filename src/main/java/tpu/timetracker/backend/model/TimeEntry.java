@@ -41,6 +41,10 @@ final public class TimeEntry extends AbstractEntity {
   @JoinColumn(name = "PROJECT_ID")
   private Project project;
 
+  @ManyToOne
+  @JoinColumn(name = "TASK_ID")
+  private Task task;
+
   protected TimeEntry() {}
 
   public TimeEntry(Task t) {
@@ -49,9 +53,9 @@ final public class TimeEntry extends AbstractEntity {
     this.workspace = this.project.getWorkspace();
     this.ownerId = this.workspace.getOwnerId();
 
-    endDate = String.valueOf(new Date().getTime());
-    startDate = String.valueOf(new Date().getTime());
-    duration = 0;
+      startDate = String.valueOf(new Date().getTime());
+      endDate = "";
+      duration = 0L;
   }
 
   public TimeEntry(Task t, String startDate) {
@@ -119,5 +123,5 @@ final public class TimeEntry extends AbstractEntity {
 
   public Task getTask() {
     return task;
-  }
+}
 }

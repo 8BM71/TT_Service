@@ -10,6 +10,8 @@ import java.util.Collection;
 import java.util.Optional;
 
 public interface TimeEntryRepository extends JpaRepository<TimeEntry, String> {
+  Optional<TimeEntry> findById(String id);
+
   Collection<TimeEntry> findAllByWorkspace(Workspace w);
 
   Collection<TimeEntry> findAllByProject(Project p);

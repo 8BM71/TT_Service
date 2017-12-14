@@ -183,6 +183,12 @@ public class MutationFetchers {
     return returnDefault.with(taskService.createTask(proj.get()));
   };
 
+  static DataFetcher stopTask = environment -> {
+      String timeEntryId = environment.getArgument("timeEntryId");
+
+      return timeEntryService.stopTimeEntry(timeEntryId);
+  };
+
   static DataFetcher deleteProject = environment -> {
     String projId = environment.getArgument("projId");
     projectService.deleteProject(projId);
