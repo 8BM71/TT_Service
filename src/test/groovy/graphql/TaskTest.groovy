@@ -66,7 +66,7 @@ class TaskTest extends Specification {
 
     def "create task"() {
         given:
-        task = taskService.createTask(project).get()
+        task = taskService.createTask(project, "myTask").get()
 
         expect:
         task.id != ""
