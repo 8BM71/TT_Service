@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import tpu.timetracker.backend.model.AbstractEntity;
 import tpu.timetracker.backend.model.Project;
+import tpu.timetracker.backend.model.Task;
 import tpu.timetracker.backend.model.Workspace;
 import tpu.timetracker.backend.services.ProjectService;
 import tpu.timetracker.backend.services.TaskService;
@@ -61,6 +62,11 @@ public class QueryFetchers {
     return projectService.getAllWorkspaceProjects(w);
   };
 
+  static DataFetcher timeEntryDataFetcher = environment -> {
+    String id = environment.getArgument("id");
+    return timeEntryService.getTimeEntryById(id);
+  };
+
   static DataFetcher timeEntriesDataFetcher = environment -> {
     AbstractEntity entity = environment.getSource();
 
@@ -70,6 +76,10 @@ public class QueryFetchers {
 
     if (entity instanceof Project) {
       return timeEntryService.getAllByProject((Project) entity);
+    }
+
+    if (entity instanceof Task) {
+      return timeEntryService.getAllByTask((Task) entity);
     }
 
     return null;

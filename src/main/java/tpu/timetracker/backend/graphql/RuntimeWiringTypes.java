@@ -54,7 +54,8 @@ class RuntimeWiringTypes {
           builder
               .dataFetcher("description", env -> env.<Task>getSource().getDescription())
               .dataFetcher("name", env -> env.<Task>getSource().getName())
-              .dataFetcher("timeEntry", env -> env.<Task>getSource().getTimeEntry()));
+              .dataFetcher("timeEntry", QueryFetchers.timeEntryDataFetcher)
+              .dataFetcher("timeEntries", QueryFetchers.timeEntriesDataFetcher));
 
   static TypeRuntimeWiring timeEntryTypeWiring = CustomTypeRuntimeWiring.newTypeWiring(
       "TimeEntry", builder ->

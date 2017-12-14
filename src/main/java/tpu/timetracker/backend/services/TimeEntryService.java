@@ -28,10 +28,6 @@ public class TimeEntryService {
       throw new SecurityException(String.format("Task with that id: %s does not exist!", t.getId()));
     }
 
-    if (t.getTimeEntry() != null) {
-      return Optional.of(t.getTimeEntry());
-    }
-
     TimeEntry timeEntry = new TimeEntry(t);
     return Optional.of(timeEntryRepository.save(timeEntry));
   }
@@ -62,5 +58,17 @@ public class TimeEntryService {
     Objects.requireNonNull(ownerId);
 
     return timeEntryRepository.findAllByOwnerId(ownerId);
+  }
+
+  public Collection<TimeEntry> getAllByTask(Task t) {
+    Objects.requireNonNull(t);
+
+    return timeEntryRepository.findAllByTask(t);
+  }
+
+  public Optional<TimeEntry> getTimeEntryById(String id) {
+    Objects.requireNonNull(id);
+
+    return timeEntryRepository.findTimeEntryById(id);
   }
 }

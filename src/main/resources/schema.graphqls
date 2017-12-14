@@ -41,7 +41,8 @@ type Task {
   crdate: String!
   description: String
   name: String
-  timeEntry: TimeEntry!
+  timeEntry(id: String!): TimeEntry
+  timeEntries: [TimeEntry]
 }
 
 type TimeEntry {

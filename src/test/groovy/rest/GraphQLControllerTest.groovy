@@ -110,11 +110,6 @@ class GraphQLControllerTest extends Specification {
         query: """ mutation M {
       createTask(projId: "${p.id}") {
         id
-        timeEntry {
-          endDate
-          startDate
-          duration
-        }
       }
     }
     """
@@ -129,6 +124,5 @@ class GraphQLControllerTest extends Specification {
     expect:
     response.status == HttpStatus.OK.value()
     content.errors == null
-    content.data.createTask.timeEntry.duration == 0
   }
 }
