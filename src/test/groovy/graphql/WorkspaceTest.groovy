@@ -142,7 +142,7 @@ class WorkspaceTest extends Specification {
     given:
     def w = workspaceService.createWorkspace(user.getId(), "5testWorkspace").get()
     def p = projectService.createProject(w, "5myProject").get()
-    def t = taskService.createTask(p).get()
+    def t = taskService.createTask(p, "myTask").get()
     def query = """
       {
         workspace(id: \"${w.id}\", ownerId: \"${user.id}\") {
