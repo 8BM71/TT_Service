@@ -185,25 +185,17 @@ public class MutationFetchers {
 
   static DataFetcher deleteProject = environment -> {
     String projId = environment.getArgument("projId");
+    projectService.deleteProject(projId);
 
     Optional<Project> proj = projectService.getProjectById(projId);
-    if ( ! proj.isPresent()) {
-      return Optional.empty();
-    }
-
-    projectService.deleteProject(proj.get());
-    return Optional.empty();
+    return  ! proj.isPresent();
   };
 
   static DataFetcher deleteWorkspace = environment -> {
     String wsId = environment.getArgument("wsId");
+    workspaceService.deleteWorkspace(wsId);
 
     Optional<Workspace> ws = workspaceService.getWorkspaceById(wsId);
-    if ( ! ws.isPresent()) {
-      return Optional.empty();
-    }
-
-    workspaceService.deleteWorkspace(ws.get());
-    return Optional.empty();
+    return ! ws.isPresent();
   };
 }
