@@ -18,8 +18,15 @@ public class TimeEntryService {
   @Autowired
   private TimeEntryRepository timeEntryRepository;
 
+  @Autowired
+  private TaskService taskService;
+
   public Optional<TimeEntry> createTimeEntry(Task t) {
     Objects.requireNonNull(t);
+
+    if ( ! taskService.taskExist(t.getId())){
+      throw new SecurityException(String.format("Task with that id: %s does not exist!", t.getId()));
+    }
 
     if (t.getTimeEntry() != null) {
       return Optional.of(t.getTimeEntry());

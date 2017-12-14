@@ -16,9 +16,16 @@ public class ProjectService {
   @Autowired
   private ProjectRepository projectRepository;
 
+  @Autowired
+  private WorkspaceService workspaceService;
+
   public Optional<Project> createProject(Workspace ws, String name) {
     Objects.requireNonNull(ws);
     Objects.requireNonNull(name);
+
+    if ( ! workspaceService.getWorkspaceById(ws.getId()).isPresent()){
+      throw new SecurityException(String.format("Workspace with that id: %s does not exist!", ws.getId()));
+    }
 
     if (projectExist(ws, name)) {
       throw new SecurityException(String.format("Project with that name: %s already exist!", name));

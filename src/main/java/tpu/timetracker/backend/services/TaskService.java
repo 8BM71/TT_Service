@@ -17,8 +17,15 @@ public class TaskService {
   @Autowired
   private TaskRepository taskRepository;
 
+  @Autowired
+  private ProjectService projectService;
+
   public Optional<Task> createTask(Project p) {
     Objects.requireNonNull(p);
+
+    if ( ! projectService.projectExist(p.getId())){
+      throw new SecurityException(String.format("Task with that id: %s does not exist!", p.getId()));
+    }
 
     Task task = new Task(p);
     TimeEntry timeEntry = new TimeEntry(task);

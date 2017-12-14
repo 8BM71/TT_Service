@@ -15,9 +15,16 @@ public class WorkspaceService {
   @Autowired
   private WorkspaceRepository workspaceRepository;
 
+  @Autowired
+  private UserService userService;
+
   public Optional<Workspace> createWorkspace(String ownerId, String name) {
     Objects.requireNonNull(ownerId);
     Objects.requireNonNull(name);
+
+    if ( ! userService.getUserById(ownerId).isPresent()) {
+      throw new SecurityException(String.format("User with that id: %s does not exist!", ownerId));
+    }
 
     if (workspaceExist(ownerId, name)) {
       throw new SecurityException(String.format("Workspace with that name: %s already exist!", name));
