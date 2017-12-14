@@ -191,7 +191,7 @@ public class MutationFetchers {
       return Optional.empty();
     }
 
-    projectService.deleteProject(proj);
+    projectService.deleteProject(proj.get());
     return Optional.empty();
   };
 
@@ -203,7 +203,7 @@ public class MutationFetchers {
       return Optional.empty();
     }
 
-    workspaceService.deleteWorkspace(ws);
+    workspaceService.deleteWorkspace(ws.get());
     return Optional.empty();
   };
 }
