@@ -91,7 +91,15 @@ public class QueryFetchers {
   };
 
   static DataFetcher tasksDataFetcher = environment -> {
-    Project p = environment.getSource();
-    return taskService.getAllProjectTasks(p);
+    AbstractEntity entity = environment.getSource();
+
+    if (entity instanceof Workspace) {
+      return taskService.getAllWorkspaceTasks(((Workspace) entity));
+    }
+
+    if (entity instanceof Project) {
+      return taskService.getAllProjectTasks((Project) entity);
+    }
+    return null;
   };
 }

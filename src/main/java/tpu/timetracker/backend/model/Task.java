@@ -22,7 +22,11 @@ final public class Task extends AbstractEntity {
   private String name;
 
   @ManyToOne
+  @JoinColumn(name = "WORKSPACE_ID")
+  private Workspace workspace;
+
   @OnDelete(action = OnDeleteAction.CASCADE)
+  @ManyToOne
   @JoinColumn(name = "PROJECT_ID")
   private Project project;
 
@@ -42,6 +46,7 @@ final public class Task extends AbstractEntity {
 
   public Task(Project project) {
     this.project = project;
+    this.workspace = this.project.getWorkspace();
   }
 
   protected Task() {}
@@ -73,4 +78,6 @@ final public class Task extends AbstractEntity {
   public void setTaskState(TaskState taskState) {
     this.taskState = taskState;
   }
+
+  public Workspace getWorkspace() { return workspace; }
 }

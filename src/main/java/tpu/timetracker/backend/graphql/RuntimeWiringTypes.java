@@ -32,7 +32,8 @@ class RuntimeWiringTypes {
               .dataFetcher("ownerId", env -> env.<Workspace>getSource().getOwnerId())
               .dataFetcher("project", QueryFetchers.projectDataFetcher)
               .dataFetcher("projects", QueryFetchers.projectsDataFetcher)
-              .dataFetcher("timeEntries", QueryFetchers.timeEntriesDataFetcher));
+              .dataFetcher("timeEntries", QueryFetchers.timeEntriesDataFetcher)
+              .dataFetcher("tasks", QueryFetchers.tasksDataFetcher));
 
   static TypeRuntimeWiring userTypeWiring = CustomTypeRuntimeWiring.newTypeWiring(
       "User", builder ->
