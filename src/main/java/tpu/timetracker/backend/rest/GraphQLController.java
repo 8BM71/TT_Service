@@ -76,7 +76,7 @@ public class GraphQLController {
 
     ExecutionResult executionResult = graphQL.execute(
         ExecutionInput.newExecutionInput()
-            .query(query)
+        .query(query)
             .variables(vars)
             .build());
 

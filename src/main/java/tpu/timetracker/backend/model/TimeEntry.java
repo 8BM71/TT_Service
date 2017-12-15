@@ -48,7 +48,7 @@ final public class TimeEntry extends AbstractEntity {
   protected TimeEntry() {}
 
   public TimeEntry(Task t) {
-    this.task = t;
+      this.task = t;
     this.project = t.getProject();
     this.workspace = this.project.getWorkspace();
     this.ownerId = this.workspace.getOwnerId();

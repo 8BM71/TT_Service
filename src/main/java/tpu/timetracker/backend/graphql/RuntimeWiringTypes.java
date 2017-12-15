@@ -1,12 +1,7 @@
 package tpu.timetracker.backend.graphql;
 
 import graphql.schema.idl.TypeRuntimeWiring;
-import tpu.timetracker.backend.model.AbstractEntity;
-import tpu.timetracker.backend.model.Project;
-import tpu.timetracker.backend.model.Task;
-import tpu.timetracker.backend.model.TimeEntry;
-import tpu.timetracker.backend.model.User;
-import tpu.timetracker.backend.model.Workspace;
+import tpu.timetracker.backend.model.*;
 
 import java.util.function.UnaryOperator;
 
@@ -92,6 +87,7 @@ class RuntimeWiringTypes {
               .dataFetcher("createProject", MutationFetchers.createProject)
               .dataFetcher("updateProject", MutationFetchers.updateProject)
               .dataFetcher("removeProject", MutationFetchers.removeProject)
-              .dataFetcher("stopTask", MutationFetchers.stopTask)
+              .dataFetcher("startTask", MutationFetchers.startTask)
+              .dataFetcher("stopTimeEntry", MutationFetchers.stopTimeEntry)
               .dataFetcher("createTask", MutationFetchers.createTask));
 }

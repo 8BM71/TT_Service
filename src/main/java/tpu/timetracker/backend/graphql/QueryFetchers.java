@@ -7,11 +7,7 @@ import tpu.timetracker.backend.model.AbstractEntity;
 import tpu.timetracker.backend.model.Project;
 import tpu.timetracker.backend.model.Task;
 import tpu.timetracker.backend.model.Workspace;
-import tpu.timetracker.backend.services.ProjectService;
-import tpu.timetracker.backend.services.TaskService;
-import tpu.timetracker.backend.services.TimeEntryService;
-import tpu.timetracker.backend.services.UserService;
-import tpu.timetracker.backend.services.WorkspaceService;
+import tpu.timetracker.backend.services.*;
 
 @Component
 public class QueryFetchers {

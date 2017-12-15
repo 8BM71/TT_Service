@@ -8,11 +8,7 @@ import tpu.timetracker.backend.model.AbstractEntity;
 import tpu.timetracker.backend.model.Project;
 import tpu.timetracker.backend.model.TaskState;
 import tpu.timetracker.backend.model.Workspace;
-import tpu.timetracker.backend.services.ProjectService;
-import tpu.timetracker.backend.services.TaskService;
-import tpu.timetracker.backend.services.TimeEntryService;
-import tpu.timetracker.backend.services.UserService;
-import tpu.timetracker.backend.services.WorkspaceService;
+import tpu.timetracker.backend.services.*;
 
 import javax.persistence.EntityExistsException;
 import java.util.Map;
@@ -183,7 +179,17 @@ public class MutationFetchers {
     return returnDefault.with(taskService.createTask(proj.get()));
   };
 
-  static DataFetcher stopTask = environment -> {
+  static DataFetcher startTask = environment -> {
+    String taskid = environment.getArgument("taskId");
+
+    Optional<Task> task = taskService.getTaskById(taskid);
+    if (!task.isPresent()){
+      return Optional.empty();
+    }
+    return timeEntryService.createTimeEntry(task.get());
+  };
+
+  static DataFetcher stopTimeEntry = environment -> {
       String timeEntryId = environment.getArgument("timeEntryId");
 
       return timeEntryService.stopTimeEntry(timeEntryId);

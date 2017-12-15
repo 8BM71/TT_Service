@@ -70,7 +70,6 @@ class TaskTest extends Specification {
 
         expect:
         task.id != ""
-        task.timeEntry.id != ""
     }
 
 }
