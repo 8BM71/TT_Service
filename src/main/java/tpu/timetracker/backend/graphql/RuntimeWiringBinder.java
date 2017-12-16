@@ -13,20 +13,24 @@ public class RuntimeWiringBinder {
 
   private static RuntimeWiring wiring = RuntimeWiring.newRuntimeWiring()
       .type(RuntimeWiringTypes.queryTypeWiring)
-      .type(RuntimeWiringTypes.mutationTypeWiring)
       .type(RuntimeWiringTypes.workspaceTypeWiring)
       .type(RuntimeWiringTypes.userTypeWiring)
       .type(RuntimeWiringTypes.projectTypeWiring)
       .type(RuntimeWiringTypes.taskTypeWiring)
       .type(RuntimeWiringTypes.timeEntryTypeWiring)
+      .type(RuntimeWiringTypes.mutationTypeWiring)
       .build();
 
   public static GraphQLSchema generateSchema() {
     SchemaParser schemaParser = new SchemaParser();
 
-    InputStream is = RuntimeWiring.class.getResourceAsStream("/schema.graphqls");
+    InputStream isQuery = RuntimeWiring.class.getResourceAsStream("/schema-query.graphqls");
+    InputStream isMutation = RuntimeWiring.class.getResourceAsStream("/schema-mutation.graphqls");
 
-    TypeDefinitionRegistry typeRegistry = schemaParser.parse(new InputStreamReader(is));
+    TypeDefinitionRegistry typeRegistry = new TypeDefinitionRegistry();
+    typeRegistry.merge(schemaParser.parse(new InputStreamReader(isQuery)));
+    typeRegistry.merge(schemaParser.parse(new InputStreamReader(isMutation)));
+
     return new SchemaGenerator().makeExecutableSchema(typeRegistry, wiring);
   }
 }

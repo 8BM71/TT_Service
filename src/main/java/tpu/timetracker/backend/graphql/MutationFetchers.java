@@ -3,9 +3,9 @@ package tpu.timetracker.backend.graphql;
 import graphql.schema.DataFetcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import tpu.timetracker.backend.model.AbstractEntity;
 import tpu.timetracker.backend.model.Project;
-import tpu.timetracker.backend.model.Task;
 import tpu.timetracker.backend.model.Workspace;
 import tpu.timetracker.backend.services.ProjectService;
 import tpu.timetracker.backend.services.TaskService;
@@ -13,6 +13,8 @@ import tpu.timetracker.backend.services.TimeEntryService;
 import tpu.timetracker.backend.services.UserService;
 import tpu.timetracker.backend.services.WorkspaceService;
 
+import javax.persistence.EntityExistsException;
+import java.util.Map;
 import java.util.Optional;
 
 @Component
@@ -38,33 +40,64 @@ public class MutationFetchers {
     MutationFetchers.taskService = taskService;
   }
 
-  static DataFetcher createWorkspace = environment -> {
-    String ownerId = environment.getArgument("ownerId");
-    String name = environment.getArgument("name");
+  @FunctionalInterface
+  interface CustomDataFetcher<T> {
+    T with(Optional<? extends AbstractEntity> op);
+  }
 
-    return workspaceService.createWorkspace(ownerId, name);
+  private static CustomDataFetcher<Object> returnDefault = (Optional<? extends AbstractEntity> op) -> {
+    if (op.isPresent()) {
+      return op.get().getId();
+    } else {
+      return Optional.empty();
+    }
+  };
+
+  static DataFetcher createUser = environment -> {
+    Map<String, Object> user = environment.getArgument("user");
+
+    String username = (String) user.get("username");
+    String name = (String) user.get("name");
+    String email = (String) user.get("email");
+
+    if (StringUtils.isEmpty(name)) {
+      return userService.createUser(username, email).isPresent();
+    }
+
+    return userService.createUser(username, email, name).isPresent();
+  };
+
+  static DataFetcher createWorkspace = environment -> {
+    Map<String, Object> m = environment.getArgument("workspace");
+    String name = (String) m.get("name");
+    String ownerId = (String) m.get("ownerId");
+    return returnDefault.with(workspaceService.createWorkspace(ownerId, name));
   };
 
   static DataFetcher createProject = environment -> {
+    Map<String, Object> m = environment.getArgument("project");
+    String projName = (String) m.get("name");
     String wsId = environment.getArgument("wsId");
-    String name = environment.getArgument("name");
 
     Optional<Workspace> ws = workspaceService.getWorkspaceById(wsId);
     if ( ! ws.isPresent()) {
-      return Optional.empty();
+      throw new EntityExistsException("Workspace with that id: " + wsId + " does not found");
     }
 
-    return projectService.createProject(ws.get(), name);
+    return returnDefault.with(projectService.createProject(ws.get(), projName));
   };
 
   static DataFetcher createTask = environment -> {
+    Map<String, Object> m = environment.getArgument("task");
+    String desc = (String) m.get("description");
+    String name = (String) m.get("name");
     String projId = environment.getArgument("projId");
 
     Optional<Project> proj = projectService.getProjectById(projId);
     if ( ! proj.isPresent()) {
-      return Optional.empty();
+      throw new EntityExistsException("Project with that id: " + projId + " does not found");
     }
 
-    return taskService.createTask(proj.get());
+    return returnDefault.with(taskService.createTask(proj.get()));
   };
 }

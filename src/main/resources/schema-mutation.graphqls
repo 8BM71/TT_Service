@@ -1,0 +1,50 @@
+type Mutation {
+#    auth(token: TokenInput): Boolean
+    createUser(user: UserInput!): Boolean!
+
+    # @return wsID
+    createWorkspace(workspace: WorkspaceInput!): String!
+    #    updateWorkspace(workspace: Workspace!): Boolean!
+    #    removeWorkspace(id: String!): Boolean!
+
+    # @return projID
+    createProject(wsId: String!, project: ProjectInput!): String!
+    #    updateProject(idWorkspace: String!, project: Project!): Boolean!
+    #    removeProject(id: String!): Boolean!
+
+    # @return taskID
+    createTask(projId: String!, task: TaskInput!): String!
+#    updateTask(idProject: String!, task: Task!): Boolean!
+#    removeTask(id: String!): Boolean!
+#
+#    startTask(id: String!): Boolean!
+#    finishTask(id: String!, timeEntry: TimeEntry!): String!
+#    updateTimeEntry(timeEntry: TimeEntry!): Boolean!
+}
+
+
+input WorkspaceInput {
+    name: String!
+    ownerId: String!
+}
+
+input ProjectInput {
+    name: String!
+}
+
+input TaskInput {
+    description: String
+    name: String
+}
+
+input TimeEntryInput {
+    duration: Long
+    endDate: String
+    startDate: String
+}
+
+input UserInput {
+    username: String!
+    name: String
+    email: String!
+}

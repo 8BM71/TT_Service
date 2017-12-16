@@ -72,8 +72,9 @@ class RuntimeWiringTypes {
               .dataFetcher("user", QueryFetchers.userDataFetcher));
 
   static TypeRuntimeWiring mutationTypeWiring = TypeRuntimeWiring.newTypeWiring(
-      "Mutations", builder ->
+      "Mutation", builder ->
           builder
+              .dataFetcher("createUser", MutationFetchers.createUser)
               .dataFetcher("createWorkspace", MutationFetchers.createWorkspace)
               .dataFetcher("createProject", MutationFetchers.createProject)
               .dataFetcher("createTask", MutationFetchers.createTask));

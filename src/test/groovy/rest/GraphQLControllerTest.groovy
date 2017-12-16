@@ -15,6 +15,7 @@ import tpu.timetracker.backend.model.User
 import tpu.timetracker.backend.model.Workspace
 import tpu.timetracker.backend.rest.GraphQLController
 import tpu.timetracker.backend.services.ProjectService
+import tpu.timetracker.backend.services.TaskService
 import tpu.timetracker.backend.services.UserService
 import tpu.timetracker.backend.services.WorkspaceService
 
@@ -40,6 +41,9 @@ class GraphQLControllerTest extends Specification {
   @Autowired
   ProjectService projectService
 
+  @Autowired
+  TaskService taskService
+
   User user
 
   def setup() {
@@ -50,16 +54,50 @@ class GraphQLControllerTest extends Specification {
     }
   }
 
+  def "create user"() {
+    given:
+    def jsonBuilder = new JsonBuilder()
+    jsonBuilder (
+      query: """
+            mutation M (\$usr: UserInput!) {
+              createUser(user: \$usr)
+            }
+          """,
+      vars: {
+        usr (
+          username: "HONORminFieldLength-username",
+          name: "HONORminFieldLength-name",
+          email: "HONORminFieldLength-email"
+        )
+      }
+    )
+    def response = mockMvc.perform(post("/graphql")
+        .contentType(mediaType)
+        .content(jsonBuilder.toString()))
+        .andReturn()
+        .response
+    def content = new JsonSlurper().parseText(response.contentAsString)
+
+    expect:
+    content.errors == null
+    content.data.createUser
+  }
+
   def "create workspace"() {
     when:
     def jsonBuilder = new JsonBuilder()
-    def root = jsonBuilder (
-      query: """ mutation M {
-        createWorkspace(name: "myFirstWsByMutation", ownerId: "${user.id}") {
-          name
+    jsonBuilder (
+        query: """
+              mutation M (\$ws: WorkspaceInput!) {
+                createWorkspace(workspace: \$ws)
+              }
+              """,
+        vars: {
+          ws (
+              name: "someName",
+              ownerId: user.id
+          )
         }
-      }""",
-      vars: ""
     )
 
     then:
@@ -69,11 +107,17 @@ class GraphQLControllerTest extends Specification {
         .andReturn()
         .response
     def content = new JsonSlurper().parseText(response.contentAsString)
+    def goVerify = { id ->
+      workspaceService.getWorkspaceById(id).get()
+    }
 
     expect:
+    content.errors == null
     response.status == HttpStatus.OK.value()
     response.contentType == mediaType as String
-    content.data.createWorkspace.name == "myFirstWsByMutation"
+    content.data.createWorkspace != null
+    goVerify(content.data.createWorkspace as String).name == "someName"
+    goVerify(content.data.createWorkspace as String).ownerId == user.id
   }
 
   def "create project"() {
@@ -81,13 +125,13 @@ class GraphQLControllerTest extends Specification {
     Workspace w = workspaceService.createWorkspace(user.id, "mySecondWsByMutation").get()
     def jsonBuilder = new JsonBuilder()
     jsonBuilder (
-        query: """ mutation M {
-      createProject(wsId: "${w.id}", name: "projByMutation") {
-        id
-        name
-      }
-    }
-    """
+        query: """ mutation M (\$id: String!, \$p: ProjectInput!) {
+          createProject(wsId: \$id, project: \$p)
+        }""",
+        vars: {
+          id (w.id)
+          p (name: "projName")
+        }
     )
     def response = mockMvc.perform(post("/graphql")
         .contentType(mediaType)
@@ -95,10 +139,16 @@ class GraphQLControllerTest extends Specification {
         .andReturn()
         .response
     def content = new JsonSlurper().parseText(response.contentAsString)
+    def goVerify = { id ->
+      projectService.getProjectById(id).get()
+    }
 
     expect:
     response.status == HttpStatus.OK.value()
-    content.data.createProject.name == "projByMutation"
+    content.errors == null
+    goVerify(content.data.createProject as String).name == "projName"
+    projectService.getProjectByWorkspaceAndName(w, "projName").get().id
+        .equals(content.data.createProject)
   }
 
   def "create task"() {
@@ -107,12 +157,16 @@ class GraphQLControllerTest extends Specification {
     Project p = projectService.createProject(w, "MyBeautifulProject").get()
     def jsonBuilder = new JsonBuilder()
     jsonBuilder (
-        query: """ mutation M {
-      createTask(projId: "${p.id}") {
-        id
-      }
-    }
-    """
+        query: """ mutation M (\$projId: String!, \$t: TaskInput!) {
+          createTask(projId: \$projId, task: \$t)
+        }""",
+        vars: {
+          projId (p.id)
+          t (
+              description: "my first task desc ever",
+              name: "task may be created without any name"
+          )
+        }
     )
     def response = mockMvc.perform(post("/graphql")
         .contentType(mediaType)
@@ -120,9 +174,13 @@ class GraphQLControllerTest extends Specification {
         .andReturn()
         .response
     def content = new JsonSlurper().parseText(response.contentAsString)
+    def goVerify = { id ->
+      taskService.getTaskById(id).get()
+    }
 
     expect:
     response.status == HttpStatus.OK.value()
     content.errors == null
+    taskService.getTaskById(content.data.createTask).isPresent()
   }
 }
