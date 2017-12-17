@@ -4,12 +4,12 @@ type Mutation {
 
     # @return wsID
     createWorkspace(workspace: WorkspaceInput!): String!
-    #    updateWorkspace(workspace: Workspace!): Boolean!
+    #    updateWorkspace(workspace: WorkspaceInput!): Boolean!
     #    removeWorkspace(id: String!): Boolean!
 
     # @return projID
     createProject(wsId: String!, project: ProjectInput!): String!
-    #    updateProject(idWorkspace: String!, project: Project!): Boolean!
+    #    updateProject(idWorkspace: String!, project: ProjectInput!): Boolean!
     #    removeProject(id: String!): Boolean!
 
     # @return taskID
@@ -26,15 +26,18 @@ type Mutation {
 input WorkspaceInput {
     name: String!
     ownerId: String!
+    description: String
 }
 
 input ProjectInput {
     name: String!
+    color: Int
 }
 
 input TaskInput {
     description: String
     name: String
+    state: TaskState
 }
 
 input TimeEntryInput {

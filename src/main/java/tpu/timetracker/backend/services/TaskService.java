@@ -24,6 +24,18 @@ public class TaskService {
     return createTask(p, null, null, null);
   }
 
+  public Optional<Task> createTask(Project p, TaskState state) {
+    return createTask(p, null, null, state);
+  }
+
+  public Optional<Task> createTask(Project project, String name) {
+    return createTask(project, null, name, null);
+  }
+
+  public Optional<Task> createTask(Project project, String name, String description) {
+    return createTask(project, description, name, null);
+  }
+
   public Optional<Task> createTask(Project project, String description, String name, TaskState state) {
     Objects.requireNonNull(project);
 

@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc
 import spock.lang.Specification
 import tpu.timetracker.backend.BackendApplication
 import tpu.timetracker.backend.model.Project
+import tpu.timetracker.backend.model.TaskState
 import tpu.timetracker.backend.model.User
 import tpu.timetracker.backend.model.Workspace
 import tpu.timetracker.backend.rest.GraphQLController
@@ -95,7 +96,8 @@ class GraphQLControllerTest extends Specification {
         vars: {
           ws (
               name: "someName",
-              ownerId: user.id
+              ownerId: user.id,
+              description: "Somebody help me! They forced me to write tests!"
           )
         }
     )
@@ -118,6 +120,7 @@ class GraphQLControllerTest extends Specification {
     content.data.createWorkspace != null
     goVerify(content.data.createWorkspace as String).name == "someName"
     goVerify(content.data.createWorkspace as String).ownerId == user.id
+    goVerify(content.data.createWorkspace as String).description == "Somebody help me! They forced me to write tests!"
   }
 
   def "create project"() {
@@ -130,7 +133,7 @@ class GraphQLControllerTest extends Specification {
         }""",
         vars: {
           id (w.id)
-          p (name: "projName")
+          p (name: "projName", color: 1234556)
         }
     )
     def response = mockMvc.perform(post("/graphql")
@@ -149,6 +152,9 @@ class GraphQLControllerTest extends Specification {
     goVerify(content.data.createProject as String).name == "projName"
     projectService.getProjectByWorkspaceAndName(w, "projName").get().id
         .equals(content.data.createProject)
+
+    projectService.getProjectByWorkspaceAndName(w, "projName").get().color
+        .equals(1234556)
   }
 
   def "create task"() {
@@ -164,7 +170,8 @@ class GraphQLControllerTest extends Specification {
           projId (p.id)
           t (
               description: "my first task desc ever",
-              name: "task may be created without any name"
+              name: "task may be created without any name",
+              state: TaskState.CREATED
           )
         }
     )
@@ -182,5 +189,6 @@ class GraphQLControllerTest extends Specification {
     response.status == HttpStatus.OK.value()
     content.errors == null
     taskService.getTaskById(content.data.createTask).isPresent()
+    taskService.getTaskById(content.data.createTask).get().taskState == TaskState.CREATED
   }
 }

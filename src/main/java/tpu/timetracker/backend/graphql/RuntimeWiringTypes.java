@@ -75,9 +75,9 @@ class RuntimeWiringTypes {
       "TaskState", builder ->
           builder.enumValues(name -> {
               switch (name) {
-                case "CREATED": return 1;
-                case "EXECUTED": return 2;
-                case "COMPLETED": return 3;
+                case "CREATED": return 0;
+                case "EXECUTED": return 1;
+                case "COMPLETED": return 2;
               }
               return null; }));
 
