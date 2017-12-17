@@ -22,13 +22,25 @@ public class TimeEntryService {
   private TaskService taskService;
 
   public Optional<TimeEntry> createTimeEntry(Task t) {
+    return createTimeEntry(t, null, null, null);
+  }
+
+  public Optional<TimeEntry> createTimeEntry(Task t, String startDate) {
+    return createTimeEntry(t, null, startDate, null);
+  }
+
+  public Optional<TimeEntry> createTimeEntry(Task t, String endDate, String startDate) {
+    return createTimeEntry(t, endDate, startDate, null);
+  }
+
+  public Optional<TimeEntry> createTimeEntry(Task t, String endDate, String startDate, Long duration) {
     Objects.requireNonNull(t);
 
     if ( ! taskService.taskExist(t.getId())){
       throw new SecurityException(String.format("Task with that id: %s does not exist!", t.getId()));
     }
 
-    TimeEntry timeEntry = new TimeEntry(t);
+    TimeEntry timeEntry = new TimeEntry(t, endDate, startDate, duration);
     return Optional.of(timeEntryRepository.save(timeEntry));
   }
 

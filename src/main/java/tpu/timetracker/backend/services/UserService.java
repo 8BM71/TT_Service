@@ -27,8 +27,7 @@ public class UserService {
       throw new SecurityException(String.format("User with email: %s already exist", email));
     }
 
-    User user = new User(username, email);
-    user.setName(name);
+    User user = new User(username, email, name);
     return Optional.of(userRepository.save(user));
   }
 

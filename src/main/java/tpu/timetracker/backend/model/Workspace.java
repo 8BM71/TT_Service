@@ -1,5 +1,6 @@
 package tpu.timetracker.backend.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
@@ -17,7 +18,16 @@ final public class Workspace extends AbstractEntity {
   @JoinColumn(name = "USER_ID")
   private String ownerId;
 
+  @Column
+  private String description;
+
   protected Workspace() {}
+
+  public Workspace(String name, String ownerId, String description) {
+    this.name = name;
+    this.ownerId = ownerId;
+    this.description = description;
+  }
 
   public Workspace(String name, String ownerId) {
     this.name = name;
@@ -34,5 +44,13 @@ final public class Workspace extends AbstractEntity {
 
   public String getOwnerId() {
     return ownerId;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
   }
 }

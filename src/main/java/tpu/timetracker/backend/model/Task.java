@@ -5,6 +5,8 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -25,7 +27,18 @@ final public class Task extends AbstractEntity {
   private Project project;
 
   @Column
+  @Enumerated(EnumType.ORDINAL)
+  private TaskState taskState;
+
+  @Column
   private String description;
+
+  public Task(Project project, String description, String name, TaskState state) {
+    this.project = project;
+    this.description = description;
+    this.name = name;
+    this.taskState = state;
+  }
 
   public Task(Project project) {
     this.project = project;
@@ -51,5 +64,13 @@ final public class Task extends AbstractEntity {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public TaskState getTaskState() {
+    return taskState;
+  }
+
+  public void setTaskState(TaskState taskState) {
+    this.taskState = taskState;
   }
 }

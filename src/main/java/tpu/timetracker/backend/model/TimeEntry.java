@@ -54,6 +54,33 @@ final public class TimeEntry extends AbstractEntity {
     duration = 0L;
   }
 
+  public TimeEntry(Task t, String startDate) {
+    this.task = t;
+    this.project = t.getProject();
+    this.workspace = this.project.getWorkspace();
+    this.ownerId = this.workspace.getOwnerId();
+    this.startDate = startDate;
+  }
+
+  public TimeEntry(Task t, String endDate, String startDate) {
+    this.task = t;
+    this.project = t.getProject();
+    this.workspace = this.project.getWorkspace();
+    this.ownerId = this.workspace.getOwnerId();
+    this.endDate = endDate;
+    this.startDate = startDate;
+  }
+
+  public TimeEntry(Task t, String endDate, String startDate, Long duration) {
+    this.task = t;
+    this.project = t.getProject();
+    this.workspace = this.project.getWorkspace();
+    this.ownerId = this.workspace.getOwnerId();
+    this.endDate = endDate;
+    this.startDate = startDate;
+    this.duration = duration;
+  }
+
   public Long getDuration() {
     return duration;
   }

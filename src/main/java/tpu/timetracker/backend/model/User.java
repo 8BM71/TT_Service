@@ -22,6 +22,12 @@ final public class User extends AbstractEntity {
 
   protected User() {}
 
+  public User(String username, String email, String name) {
+    this.username = username;
+    this.email = email;
+    this.name = name;
+  }
+
   public User(String username, String email) {
     this.username = username;
     this.email = email;

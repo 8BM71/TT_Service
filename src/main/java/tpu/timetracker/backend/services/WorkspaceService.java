@@ -19,6 +19,10 @@ public class WorkspaceService {
   private UserService userService;
 
   public Optional<Workspace> createWorkspace(String ownerId, String name) {
+    return createWorkspace(ownerId, name, null);
+  }
+
+  public Optional<Workspace> createWorkspace(String ownerId, String name, String description) {
     Objects.requireNonNull(ownerId);
     Objects.requireNonNull(name);
 
@@ -30,7 +34,7 @@ public class WorkspaceService {
       throw new SecurityException(String.format("Workspace with that name: %s already exist!", name));
     }
 
-    Workspace ws = new Workspace(name, ownerId);
+    Workspace ws = new Workspace(name, ownerId, description);
     return Optional.of(workspaceRepository.save(ws));
   }
 

@@ -71,6 +71,16 @@ class RuntimeWiringTypes {
               .dataFetcher("workspaces", QueryFetchers.workspaceDataFetcher)
               .dataFetcher("user", QueryFetchers.userDataFetcher));
 
+  static TypeRuntimeWiring taskStates = TypeRuntimeWiring.newTypeWiring(
+      "TaskState", builder ->
+          builder.enumValues(name -> {
+              switch (name) {
+                case "CREATED": return 1;
+                case "EXECUTED": return 2;
+                case "COMPLETED": return 3;
+              }
+              return null; }));
+
   static TypeRuntimeWiring mutationTypeWiring = TypeRuntimeWiring.newTypeWiring(
       "Mutation", builder ->
           builder

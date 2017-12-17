@@ -3,6 +3,7 @@ package tpu.timetracker.backend.model;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -18,10 +19,19 @@ final public class Project extends AbstractEntity {
   @Size(min = 3)
   private String name;
 
+  @Column
+  private Integer color;
+
   @ManyToOne
   @OnDelete(action = OnDeleteAction.CASCADE)
   @JoinColumn(name = "WORKSPACE_ID")
   private Workspace workspace;
+
+  public Project(Workspace ws, String name, Integer color) {
+    this.workspace = ws;
+    this.name = name;
+    this.color = color;
+  }
 
   public Project(Workspace ws, String name) {
     this.workspace = ws;
@@ -40,5 +50,13 @@ final public class Project extends AbstractEntity {
 
   public Workspace getWorkspace() {
     return workspace;
+  }
+
+  public Integer getColor() {
+    return color;
+  }
+
+  public void setColor(Integer color) {
+    this.color = color;
   }
 }

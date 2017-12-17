@@ -20,6 +20,10 @@ public class ProjectService {
   private WorkspaceService workspaceService;
 
   public Optional<Project> createProject(Workspace ws, String name) {
+    return  createProject(ws, name, null);
+  }
+
+  public Optional<Project> createProject(Workspace ws, String name, Integer color) {
     Objects.requireNonNull(ws);
     Objects.requireNonNull(name);
 
@@ -31,7 +35,7 @@ public class ProjectService {
       throw new SecurityException(String.format("Project with that name: %s already exist!", name));
     }
 
-    Project project = new Project(ws, name);
+    Project project = new Project(ws, name, color);
     return Optional.of(projectRepository.save(project));
   }
 
