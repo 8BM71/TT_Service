@@ -62,7 +62,7 @@ public class MutationFetchers {
     String email = (String) user.get("email");
 
     if (StringUtils.isEmpty(name)) {
-      return userService.createUser(username, email).isPresent();
+      return returnDefault.with(userService.createUser(username, email));
     }
 
     return returnDefault.with(userService.createUser(username, email, name));
@@ -79,6 +79,34 @@ public class MutationFetchers {
     }
 
     return returnDefault.with(workspaceService.createWorkspace(ownerId, name));
+  };
+
+  static DataFetcher updateWorkspace = environment -> {
+    Map<String, Object> m = environment.getArgument("workspace");
+    String targetId = environment.getArgument("id");
+
+    String name = (String) m.get("name");
+    String description = (String) m.get("description");
+    String ownerId = (String) m.get("ownerId");
+
+    Optional<Workspace> opw = workspaceService.getWorkspaceById(targetId);
+    if ( ! opw.isPresent()) {
+      throw new EntityExistsException("Workspace does not found");
+    }
+
+    opw.get().setName(name);
+    if ( ! StringUtils.isEmpty(description)) {
+      opw.get().setDescription(description);
+    }
+
+    workspaceService.update(opw.get());
+    return true;
+  };
+
+  static DataFetcher removeWorkspace = environment -> {
+    String id = environment.getArgument("id");
+    workspaceService.deleteWorkspace(id);
+    return true;
   };
 
   static DataFetcher createProject = environment -> {

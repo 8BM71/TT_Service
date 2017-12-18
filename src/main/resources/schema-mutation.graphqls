@@ -4,8 +4,8 @@ type Mutation {
 
     # @return wsID
     createWorkspace(workspace: WorkspaceInput!): String!
-    #    updateWorkspace(workspace: WorkspaceInput!): Boolean!
-    #    removeWorkspace(id: String!): Boolean!
+    updateWorkspace(id: String!, workspace: WorkspaceInput!): Boolean!
+    removeWorkspace(id: String!): Boolean!
 
     # @return projID
     createProject(wsId: String!, project: ProjectInput!): String!

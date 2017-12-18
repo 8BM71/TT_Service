@@ -123,6 +123,74 @@ class GraphQLControllerTest extends Specification {
     goVerify(content.data.createWorkspace as String).description == "Somebody help me! They forced me to write tests!"
   }
 
+  def "update workspace"() {
+    when:
+    Workspace w = workspaceService.createWorkspace(user.id, "oldWorkspace").get()
+    def jsonBuilder = new JsonBuilder()
+    jsonBuilder (
+        query: """ mutation M (\$id: String!, \$ws: WorkspaceInput!) {
+          updateWorkspace(id: \$id, workspace: \$ws)
+        }""",
+        vars: {
+          id (w.id)
+          ws (
+              name: "updatedName",
+              ownerId: user.id,
+              description: "newDesk"
+          )
+        }
+    )
+
+    then:
+    def response = mockMvc.perform(post("/graphql")
+        .contentType(mediaType)
+        .content(jsonBuilder.toString()))
+        .andReturn()
+        .response
+    def content = new JsonSlurper().parseText(response.contentAsString)
+    def goVerify = { id ->
+      workspaceService.getWorkspaceById(id).get()
+    }
+
+    expect:
+    content.errors == null
+    content.data.updateWorkspace
+    goVerify(w.id).name == "updatedName"
+    goVerify(w.id).description == "newDesk"
+  }
+
+  def "remove workspace"() {
+    given:
+    Workspace w = workspaceService.createWorkspace(user.id, "removeWorkspace").get()
+    def jsonBuilder = new JsonBuilder()
+    jsonBuilder (
+        query: """ mutation M (\$id: String!) {
+          removeWorkspace(id: \$id)
+        }""",
+        vars: {
+          id (w.id)
+          ws (
+              name: "updatedName",
+              ownerId: user.id,
+              description: "newDesk"
+          )
+        }
+    )
+    def response = mockMvc.perform(post("/graphql")
+        .contentType(mediaType)
+        .content(jsonBuilder.toString()))
+        .andReturn()
+        .response
+    def content = new JsonSlurper().parseText(response.contentAsString)
+    def goVerify = { id ->
+      workspaceService.getWorkspaceById(id).get()
+    }
+
+    expect:
+    content.errors == null
+    workspaceService.getWorkspaceById(w.id) == Optional.empty()
+  }
+
   def "create project"() {
     given:
     Workspace w = workspaceService.createWorkspace(user.id, "mySecondWsByMutation").get()

@@ -79,4 +79,8 @@ public class WorkspaceService {
 
     return workspaceRepository.findByOwnerIdAndName(ownerId, name).isPresent();
   }
+
+  public void update(Workspace w) {
+    workspaceRepository.save(w);
+  }
 }
