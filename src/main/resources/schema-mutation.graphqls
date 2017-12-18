@@ -41,7 +41,7 @@ input TaskInput {
 }
 
 input TimeEntryInput {
-    duration: Long
+    duration: Int
     endDate: String
     startDate: String
 }

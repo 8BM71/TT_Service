@@ -17,7 +17,7 @@ final public class TimeEntry extends AbstractEntity {
   private static final long serialVersionUID = 3527966648186016367L;
 
   @Column
-  private Long duration;
+  private Integer duration;
 
   @Column
   private String startDate;
@@ -51,7 +51,7 @@ final public class TimeEntry extends AbstractEntity {
 
     endDate = String.valueOf(new Date().getTime());
     startDate = String.valueOf(new Date().getTime());
-    duration = 0L;
+    duration = 0;
   }
 
   public TimeEntry(Task t, String startDate) {
@@ -71,7 +71,7 @@ final public class TimeEntry extends AbstractEntity {
     this.startDate = startDate;
   }
 
-  public TimeEntry(Task t, String endDate, String startDate, Long duration) {
+  public TimeEntry(Task t, String endDate, String startDate, Integer duration) {
     this.task = t;
     this.project = t.getProject();
     this.workspace = this.project.getWorkspace();
@@ -81,11 +81,11 @@ final public class TimeEntry extends AbstractEntity {
     this.duration = duration;
   }
 
-  public Long getDuration() {
+  public Integer getDuration() {
     return duration;
   }
 
-  public void setDuration(Long duration) {
+  public void setDuration(Integer duration) {
     this.duration = duration;
   }
 

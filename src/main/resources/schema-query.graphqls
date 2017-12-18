@@ -52,7 +52,7 @@ type Task {
 type TimeEntry {
     id: String!
     crdate: String!
-    duration: Long
+    duration: Int
     endDate: String
     startDate: String
 }

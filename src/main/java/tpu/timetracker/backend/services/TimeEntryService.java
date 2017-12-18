@@ -33,7 +33,7 @@ public class TimeEntryService {
     return createTimeEntry(t, endDate, startDate, null);
   }
 
-  public Optional<TimeEntry> createTimeEntry(Task t, String endDate, String startDate, Long duration) {
+  public Optional<TimeEntry> createTimeEntry(Task t, String endDate, String startDate, Integer duration) {
     Objects.requireNonNull(t);
 
     if ( ! taskService.taskExist(t.getId())){
