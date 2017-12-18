@@ -89,5 +89,7 @@ class RuntimeWiringTypes {
               .dataFetcher("updateWorkspace", MutationFetchers.updateWorkspace)
               .dataFetcher("removeWorkspace", MutationFetchers.removeWorkspace)
               .dataFetcher("createProject", MutationFetchers.createProject)
+              .dataFetcher("updateProject", MutationFetchers.updateProject)
+              .dataFetcher("removeProject", MutationFetchers.removeProject)
               .dataFetcher("createTask", MutationFetchers.createTask));
 }

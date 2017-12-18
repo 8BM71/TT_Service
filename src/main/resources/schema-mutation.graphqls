@@ -9,8 +9,8 @@ type Mutation {
 
     # @return projID
     createProject(wsId: String!, project: ProjectInput!): String!
-    #    updateProject(idWorkspace: String!, project: ProjectInput!): Boolean!
-    #    removeProject(id: String!): Boolean!
+    updateProject(projId: String!, project: ProjectInput!): Boolean!
+    removeProject(id: String!): Boolean!
 
     # @return taskID
     createTask(projId: String!, task: TaskInput!): String!

@@ -81,6 +81,7 @@ public class WorkspaceService {
   }
 
   public void update(Workspace w) {
+    Objects.requireNonNull(w);
     workspaceRepository.save(w);
   }
 }

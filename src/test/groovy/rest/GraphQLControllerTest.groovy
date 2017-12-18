@@ -182,9 +182,6 @@ class GraphQLControllerTest extends Specification {
         .andReturn()
         .response
     def content = new JsonSlurper().parseText(response.contentAsString)
-    def goVerify = { id ->
-      workspaceService.getWorkspaceById(id).get()
-    }
 
     expect:
     content.errors == null
@@ -225,6 +222,67 @@ class GraphQLControllerTest extends Specification {
         .equals(1234556)
   }
 
+  def "update project"() {
+    when:
+    Workspace w = workspaceService.createWorkspace(user.id, "updateProject").get()
+    Project p = projectService.createProject(w, "updateProject", 100500).get()
+    def jsonBuilder = new JsonBuilder()
+    jsonBuilder (
+        query: """ mutation M (\$projId: String!, \$project: ProjectInput!) {
+          updateProject(projId: \$projId, project: \$project)
+        }""",
+        vars: {
+          projId (p.id)
+          project (
+              name: "updatedName",
+              color: 999999
+          )
+        }
+    )
+
+    then:
+    def response = mockMvc.perform(post("/graphql")
+        .contentType(mediaType)
+        .content(jsonBuilder.toString()))
+        .andReturn()
+        .response
+    def content = new JsonSlurper().parseText(response.contentAsString)
+    def goVerify = { id ->
+      projectService.getProjectById(id).get()
+    }
+
+    expect:
+    content.errors == null
+    content.data.updateProject
+    goVerify(p.id).name == "updatedName"
+    goVerify(p.id).color == 999999
+  }
+
+  def "remove project"() {
+    given:
+    Workspace w = workspaceService.createWorkspace(user.id, "removeWorkspace").get()
+    Project p = projectService.createProject(w, "removeProj").get()
+    def jsonBuilder = new JsonBuilder()
+    jsonBuilder (
+        query: """ mutation M (\$id: String!) {
+          removeProject(id: \$id)
+        }""",
+        vars: {
+          id (p.id)
+        }
+    )
+    def response = mockMvc.perform(post("/graphql")
+        .contentType(mediaType)
+        .content(jsonBuilder.toString()))
+        .andReturn()
+        .response
+    def content = new JsonSlurper().parseText(response.contentAsString)
+
+    expect:
+    content.errors == null
+    projectService.getProjectById(p.id) == Optional.empty()
+  }
+
   def "create task"() {
     given:
     Workspace w = workspaceService.createWorkspace(user.id, "myThirdWsByMutation").get()
@@ -249,9 +307,6 @@ class GraphQLControllerTest extends Specification {
         .andReturn()
         .response
     def content = new JsonSlurper().parseText(response.contentAsString)
-    def goVerify = { id ->
-      taskService.getTaskById(id).get()
-    }
 
     expect:
     response.status == HttpStatus.OK.value()

@@ -123,6 +123,33 @@ public class MutationFetchers {
     return returnDefault.with(projectService.createProject(ws.get(), projName, color));
   };
 
+  static DataFetcher updateProject = environment -> {
+    Map<String, Object> m = environment.getArgument("project");
+    String projId = environment.getArgument("projId");
+
+    String name = (String) m.get("name");
+    Integer color = (Integer) m.get("color");
+
+    Optional<Project> opp = projectService.getProjectById(projId);
+    if ( ! opp.isPresent()) {
+      throw new EntityExistsException("Project does not found");
+    }
+
+    opp.get().setName(name);
+    if (color != null) {
+      opp.get().setColor(color);
+    }
+
+    projectService.update(opp.get());
+    return true;
+  };
+
+  static DataFetcher removeProject = environment -> {
+    String id = environment.getArgument("id");
+    projectService.deleteProject(id);
+    return true;
+  };
+
   static DataFetcher createTask = environment -> {
     Map<String, Object> m = environment.getArgument("task");
     String desc = (String) m.get("description");

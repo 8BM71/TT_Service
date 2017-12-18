@@ -77,4 +77,9 @@ public class ProjectService {
 
     return projectRepository.findByWorkspaceAndName(ws, name).isPresent();
   }
+
+  public void update(Project p) {
+    Objects.requireNonNull(p);
+    projectRepository.save(p);
+  }
 }
