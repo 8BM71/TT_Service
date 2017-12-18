@@ -41,10 +41,6 @@ final public class TimeEntry extends AbstractEntity {
   @JoinColumn(name = "PROJECT_ID")
   private Project project;
 
-  @ManyToOne
-  @JoinColumn(name = "TASK_ID")
-  private Task task;
-
   protected TimeEntry() {}
 
   public TimeEntry(Task t) {

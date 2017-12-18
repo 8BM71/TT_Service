@@ -8,6 +8,7 @@ import tpu.timetracker.backend.model.AbstractEntity;
 import tpu.timetracker.backend.model.Project;
 import tpu.timetracker.backend.model.TaskState;
 import tpu.timetracker.backend.model.Workspace;
+import tpu.timetracker.backend.model.Task;
 import tpu.timetracker.backend.services.*;
 
 import javax.persistence.EntityExistsException;
