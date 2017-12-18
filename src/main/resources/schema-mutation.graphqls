@@ -1,6 +1,6 @@
 type Mutation {
 #    auth(token: TokenInput): Boolean
-    createUser(user: UserInput!): Boolean!
+    createUser(user: UserInput!): String!
 
     # @return wsID
     createWorkspace(workspace: WorkspaceInput!): String!

@@ -65,7 +65,7 @@ public class MutationFetchers {
       return userService.createUser(username, email).isPresent();
     }
 
-    return userService.createUser(username, email, name).isPresent();
+    return returnDefault.with(userService.createUser(username, email, name));
   };
 
   static DataFetcher createWorkspace = environment -> {

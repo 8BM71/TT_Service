@@ -81,7 +81,7 @@ class GraphQLControllerTest extends Specification {
 
     expect:
     content.errors == null
-    content.data.createUser
+    content.data.createUser != null
   }
 
   def "create workspace"() {
