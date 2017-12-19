@@ -64,7 +64,7 @@ class GraphQLControllerTest extends Specification {
               createUser(user: \$usr)
             }
           """,
-      vars: {
+      variables: {
         usr (
           username: "HONORminFieldLength-username",
           name: "HONORminFieldLength-name",
@@ -93,7 +93,7 @@ class GraphQLControllerTest extends Specification {
                 createWorkspace(workspace: \$ws)
               }
               """,
-        vars: {
+        variables: {
           ws (
               name: "someName",
               ownerId: user.id,
@@ -131,7 +131,7 @@ class GraphQLControllerTest extends Specification {
         query: """ mutation M (\$id: String!, \$ws: WorkspaceInput!) {
           updateWorkspace(id: \$id, workspace: \$ws)
         }""",
-        vars: {
+        variables: {
           id (w.id)
           ws (
               name: "updatedName",
@@ -167,7 +167,7 @@ class GraphQLControllerTest extends Specification {
         query: """ mutation M (\$id: String!) {
           removeWorkspace(id: \$id)
         }""",
-        vars: {
+        variables: {
           id (w.id)
           ws (
               name: "updatedName",
@@ -196,7 +196,7 @@ class GraphQLControllerTest extends Specification {
         query: """ mutation M (\$id: String!, \$p: ProjectInput!) {
           createProject(wsId: \$id, project: \$p)
         }""",
-        vars: {
+        variables: {
           id (w.id)
           p (name: "projName", color: 1234556)
         }
@@ -231,7 +231,7 @@ class GraphQLControllerTest extends Specification {
         query: """ mutation M (\$projId: String!, \$project: ProjectInput!) {
           updateProject(projId: \$projId, project: \$project)
         }""",
-        vars: {
+        variables: {
           projId (p.id)
           project (
               name: "updatedName",
@@ -267,7 +267,7 @@ class GraphQLControllerTest extends Specification {
         query: """ mutation M (\$id: String!) {
           removeProject(id: \$id)
         }""",
-        vars: {
+        variables: {
           id (p.id)
         }
     )
@@ -292,7 +292,7 @@ class GraphQLControllerTest extends Specification {
         query: """ mutation M (\$projId: String!, \$t: TaskInput!) {
           createTask(projId: \$projId, task: \$t)
         }""",
-        vars: {
+        variables: {
           projId (p.id)
           t (
               description: "my first task desc ever",

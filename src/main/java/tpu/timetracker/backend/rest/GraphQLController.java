@@ -47,7 +47,7 @@ public class GraphQLController {
 
   @SuppressWarnings("unchecked")
   private Map<String, Object> getVariablesFromRequest(Map<String, Object> body) {
-    Object variablesFromRequest = body.get("vars");
+    Object variablesFromRequest = body.get("variables");
 
     if (variablesFromRequest == null) {
       return Collections.emptyMap();
@@ -72,12 +72,12 @@ public class GraphQLController {
     GraphQL graphQL = GraphQL.newGraphQL(schema).build();
 
     String query = (String) body.get("query");
-    Map<String, Object> vars = getVariablesFromRequest(body);
+    Map<String, Object> variables = getVariablesFromRequest(body);
 
     ExecutionResult executionResult = graphQL.execute(
         ExecutionInput.newExecutionInput()
-        .query(query)
-            .variables(vars)
+            .query(query)
+            .variables(variables)
             .build());
 
     if ( ! executionResult.getErrors().isEmpty()) {
