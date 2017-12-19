@@ -1,12 +1,7 @@
 package tpu.timetracker.backend.graphql;
 
 import graphql.schema.idl.TypeRuntimeWiring;
-import tpu.timetracker.backend.model.AbstractEntity;
-import tpu.timetracker.backend.model.Project;
-import tpu.timetracker.backend.model.Task;
-import tpu.timetracker.backend.model.TimeEntry;
-import tpu.timetracker.backend.model.User;
-import tpu.timetracker.backend.model.Workspace;
+import tpu.timetracker.backend.model.*;
 
 import java.util.function.UnaryOperator;
 
@@ -32,7 +27,8 @@ class RuntimeWiringTypes {
               .dataFetcher("ownerId", env -> env.<Workspace>getSource().getOwnerId())
               .dataFetcher("project", QueryFetchers.projectDataFetcher)
               .dataFetcher("projects", QueryFetchers.projectsDataFetcher)
-              .dataFetcher("timeEntries", QueryFetchers.timeEntriesDataFetcher));
+              .dataFetcher("timeEntries", QueryFetchers.timeEntriesDataFetcher)
+              .dataFetcher("tasks", QueryFetchers.tasksDataFetcher));
 
   static TypeRuntimeWiring userTypeWiring = CustomTypeRuntimeWiring.newTypeWiring(
       "User", builder ->
@@ -91,5 +87,7 @@ class RuntimeWiringTypes {
               .dataFetcher("createProject", MutationFetchers.createProject)
               .dataFetcher("updateProject", MutationFetchers.updateProject)
               .dataFetcher("removeProject", MutationFetchers.removeProject)
+              .dataFetcher("startTask", MutationFetchers.startTask)
+              .dataFetcher("stopTimeEntry", MutationFetchers.stopTimeEntry)
               .dataFetcher("createTask", MutationFetchers.createTask));
 }

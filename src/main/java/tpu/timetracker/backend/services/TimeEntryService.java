@@ -9,6 +9,7 @@ import tpu.timetracker.backend.model.TimeEntry;
 import tpu.timetracker.backend.model.Workspace;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -42,6 +43,22 @@ public class TimeEntryService {
 
     TimeEntry timeEntry = new TimeEntry(t, endDate, startDate, duration);
     return Optional.of(timeEntryRepository.save(timeEntry));
+  }
+
+  public Optional<TimeEntry> stopTimeEntry(String id) {
+    Objects.requireNonNull(id);
+
+    Optional<TimeEntry> timeEntry = timeEntryRepository.findById(id);
+    if (!timeEntry.isPresent()) {
+      throw new SecurityException(String.format("Time entry with: %s not exist", id));
+    }
+
+    TimeEntry te = timeEntry.get();
+    te.setEndDate(String.valueOf(new Date().getTime()));
+    Long duration = Long.valueOf(te.getEndDate()) - Long.valueOf(te.getStartDate());
+    te.setDuration(Math.toIntExact(duration));
+
+    return Optional.of(timeEntryRepository.save(te));
   }
 
   public void deleteTimeEntry(TimeEntry t) {

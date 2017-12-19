@@ -44,14 +44,14 @@ final public class TimeEntry extends AbstractEntity {
   protected TimeEntry() {}
 
   public TimeEntry(Task t) {
-    this.task = t;
+      this.task = t;
     this.project = t.getProject();
     this.workspace = this.project.getWorkspace();
     this.ownerId = this.workspace.getOwnerId();
 
-    endDate = String.valueOf(new Date().getTime());
-    startDate = String.valueOf(new Date().getTime());
-    duration = 0;
+      startDate = String.valueOf(new Date().getTime());
+      endDate = "";
+      duration = 0;
   }
 
   public TimeEntry(Task t, String startDate) {
@@ -119,5 +119,5 @@ final public class TimeEntry extends AbstractEntity {
 
   public Task getTask() {
     return task;
-  }
+}
 }

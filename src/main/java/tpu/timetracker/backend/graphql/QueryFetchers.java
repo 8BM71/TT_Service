@@ -7,11 +7,7 @@ import tpu.timetracker.backend.model.AbstractEntity;
 import tpu.timetracker.backend.model.Project;
 import tpu.timetracker.backend.model.Task;
 import tpu.timetracker.backend.model.Workspace;
-import tpu.timetracker.backend.services.ProjectService;
-import tpu.timetracker.backend.services.TaskService;
-import tpu.timetracker.backend.services.TimeEntryService;
-import tpu.timetracker.backend.services.UserService;
-import tpu.timetracker.backend.services.WorkspaceService;
+import tpu.timetracker.backend.services.*;
 
 @Component
 public class QueryFetchers {
@@ -91,7 +87,15 @@ public class QueryFetchers {
   };
 
   static DataFetcher tasksDataFetcher = environment -> {
-    Project p = environment.getSource();
-    return taskService.getAllProjectTasks(p);
+    AbstractEntity entity = environment.getSource();
+
+    if (entity instanceof Workspace) {
+      return taskService.getAllWorkspaceTasks(((Workspace) entity));
+    }
+
+    if (entity instanceof Project) {
+      return taskService.getAllProjectTasks((Project) entity);
+    }
+    return null;
   };
 }

@@ -6,6 +6,7 @@ import tpu.timetracker.backend.jpa.TaskRepository;
 import tpu.timetracker.backend.model.Project;
 import tpu.timetracker.backend.model.Task;
 import tpu.timetracker.backend.model.TaskState;
+import tpu.timetracker.backend.model.Workspace;
 
 import java.util.Collection;
 import java.util.Objects;
@@ -61,6 +62,12 @@ public class TaskService {
     Objects.requireNonNull(p);
 
     return taskRepository.findAllByProject(p);
+  }
+
+  public Collection<Task> getAllWorkspaceTasks(Workspace ws) {
+      Objects.requireNonNull(ws);
+
+      return taskRepository.findAllByWorkspace(ws);
   }
 
   public Optional<Task> getTaskById(String id) {
