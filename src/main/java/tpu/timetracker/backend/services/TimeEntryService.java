@@ -55,7 +55,8 @@ public class TimeEntryService {
 
     TimeEntry te = timeEntry.get();
     te.setEndDate(String.valueOf(new Date().getTime()));
-    te.setDuration( Long.valueOf(te.getEndDate()) - Long.valueOf(te.getStartDate()));
+    Long duration = Long.valueOf(te.getEndDate()) - Long.valueOf(te.getStartDate());
+    te.setDuration(Math.toIntExact(duration));
 
     return Optional.of(timeEntryRepository.save(te));
   }

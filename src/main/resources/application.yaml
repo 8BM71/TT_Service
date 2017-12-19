@@ -1,20 +1,19 @@
 security:
   basic:
     enabled: false
-#  require-ssl: true
+  require-ssl: true
 
 server:
-  port: 8008
-#  port: 443
-#  http:
-#    port: 80
-#  ssl:
-#    key-store: /keys/letsencrypt.jks
-#    key-password: ${CUSTOM_SSL_CRED}
-#    key-store-password: ${CUSTOM_SSL_CRED}
-#    key-alias: tomcat
-#    enabled: true
-#    protocol: TLS
+  port: 443
+  http:
+    port: 80
+  ssl:
+    key-store: /keys/letsencrypt.jks
+    key-password: ${CUSTOM_SSL_CRED}
+    key-store-password: ${CUSTOM_SSL_CRED}
+    key-alias: tomcat
+    enabled: true
+    protocol: TLS
 
 spring:
   h2:

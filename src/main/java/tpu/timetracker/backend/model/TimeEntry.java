@@ -51,7 +51,7 @@ final public class TimeEntry extends AbstractEntity {
 
       startDate = String.valueOf(new Date().getTime());
       endDate = "";
-      duration = 0L;
+      duration = 0;
   }
 
   public TimeEntry(Task t, String startDate) {
