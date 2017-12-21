@@ -4,11 +4,7 @@ import graphql.schema.DataFetcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import tpu.timetracker.backend.model.AbstractEntity;
-import tpu.timetracker.backend.model.Project;
-import tpu.timetracker.backend.model.TaskState;
-import tpu.timetracker.backend.model.Workspace;
-import tpu.timetracker.backend.model.Task;
+import tpu.timetracker.backend.model.*;
 import tpu.timetracker.backend.services.*;
 
 import javax.persistence.EntityExistsException;
@@ -180,6 +176,33 @@ public class MutationFetchers {
     return returnDefault.with(taskService.createTask(proj.get()));
   };
 
+  static DataFetcher updateTask = environment -> {
+    Map<String, Object> m = environment.getArgument("task");
+    String id = environment.getArgument("id");
+
+    Optional<Task> task = taskService.getTaskById(id);
+    if (! task.isPresent())
+      throw new EntityExistsException("Task does not found");
+
+    String desc = (String) m.get("description");
+    String name = (String) m.get("name");
+    String projId = (String) m.get("projectId");
+
+    if (desc != null)
+      task.get().setDescription(desc);
+    if (name != null)
+      task.get().setName(name);
+
+    taskService.update(task.get());
+    return true;
+  };
+
+  static DataFetcher removeTask = environment -> {
+    String id = environment.getArgument("id");
+    taskService.deleteTask(id);
+    return true;
+  };
+
   static DataFetcher startTask = environment -> {
     String taskid = environment.getArgument("taskId");
 
@@ -191,9 +214,38 @@ public class MutationFetchers {
   };
 
   static DataFetcher stopTimeEntry = environment -> {
-      String timeEntryId = environment.getArgument("timeEntryId");
+      String timeEntryId = environment.getArgument("id");
 
       return timeEntryService.stopTimeEntry(timeEntryId);
+  };
+
+  static DataFetcher updateTimeEntry = environment -> {
+    Map<String, Object> m = environment.getArgument("timeEntry");
+    String id = environment.getArgument("id");
+
+    Optional<TimeEntry> timeEntry = timeEntryService.getTimeEntryById(id);
+    if (! timeEntry.isPresent())
+      throw new EntityExistsException("Time entry does not found");
+
+    Integer duration = (Integer) m.get("duration");
+    String startDate = (String) m.get("startDate");
+    String endDate = (String) m.get("endDate");
+
+    if (duration != null)
+      timeEntry.get().setDuration(duration);
+    if (startDate != null)
+      timeEntry.get().setStartDate(startDate);
+    if (endDate != null)
+      timeEntry.get().setEndDate(endDate);
+
+    timeEntryService.update(timeEntry.get());
+    return true;
+  };
+
+  static DataFetcher removeTimeEntry = environment -> {
+    String id = environment.getArgument("id");
+    timeEntryService.deleteTimeEntry(id);
+    return true;
   };
 
   static DataFetcher deleteProject = environment -> {

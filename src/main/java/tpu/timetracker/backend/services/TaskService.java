@@ -1,5 +1,6 @@
 package tpu.timetracker.backend.services;
 
+import javafx.beans.binding.ObjectExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tpu.timetracker.backend.jpa.TaskRepository;
@@ -78,4 +79,10 @@ public class TaskService {
   public boolean taskExist(String id) {
     return getTaskById(id).isPresent();
   }
+
+  public void update(Task task) {
+    Objects.requireNonNull(task);
+    taskRepository.save(task);
+  }
+
 }

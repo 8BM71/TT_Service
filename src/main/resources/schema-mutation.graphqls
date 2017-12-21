@@ -14,12 +14,13 @@ type Mutation {
 
     # @return taskID
     createTask(projId: String!, task: TaskInput!): String!
-#    updateTask(idProject: String!, task: Task!): Boolean!
-#    removeTask(id: String!): Boolean!
-#
-#    startTask(id: String!): Boolean!
-#    finishTask(id: String!, timeEntry: TimeEntry!): String!
-#    updateTimeEntry(timeEntry: TimeEntry!): Boolean!
+    updateTask(id: String!, task: TaskInput!): Boolean!
+    removeTask(id: String!): Boolean!
+
+    startTask(taskId: String!): TimeEntry!
+    stopTimeEntry(id: String!): TimeEntry!
+    updateTimeEntry(id: String!, timeEntry: TimeEntryInput!): Boolean!
+    removeTimeEntry(id: String!): Boolean!
 }
 
 
@@ -38,6 +39,7 @@ input TaskInput {
     description: String
     name: String
     state: TaskState
+    projectId: String
 }
 
 input TimeEntryInput {

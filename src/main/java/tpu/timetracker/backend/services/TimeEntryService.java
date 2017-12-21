@@ -106,4 +106,9 @@ public class TimeEntryService {
 
     return getTimeEntryById(id).isPresent();
   }
+
+  public void update(TimeEntry timeEntry) {
+    Objects.requireNonNull(timeEntry);
+    timeEntryRepository.save(timeEntry);
+  }
 }
