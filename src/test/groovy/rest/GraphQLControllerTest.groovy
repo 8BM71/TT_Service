@@ -11,12 +11,15 @@ import org.springframework.test.web.servlet.MockMvc
 import spock.lang.Specification
 import tpu.timetracker.backend.BackendApplication
 import tpu.timetracker.backend.model.Project
+import tpu.timetracker.backend.model.Task
 import tpu.timetracker.backend.model.TaskState
+import tpu.timetracker.backend.model.TimeEntry
 import tpu.timetracker.backend.model.User
 import tpu.timetracker.backend.model.Workspace
 import tpu.timetracker.backend.rest.GraphQLController
 import tpu.timetracker.backend.services.ProjectService
 import tpu.timetracker.backend.services.TaskService
+import tpu.timetracker.backend.services.TimeEntryService
 import tpu.timetracker.backend.services.UserService
 import tpu.timetracker.backend.services.WorkspaceService
 
@@ -44,6 +47,9 @@ class GraphQLControllerTest extends Specification {
 
   @Autowired
   TaskService taskService
+
+    @Autowired
+    TimeEntryService timeEntryService
 
   User user
 
@@ -314,4 +320,206 @@ class GraphQLControllerTest extends Specification {
     taskService.getTaskById(content.data.createTask).isPresent()
     taskService.getTaskById(content.data.createTask).get().taskState == TaskState.CREATED
   }
+
+    def "update task"() {
+        when:
+        Workspace w = workspaceService.createWorkspace(user.id, "updateWs").get()
+        Project p = projectService.createProject(w, "updateProj").get()
+        Task t = taskService.createTask(p, "updateTask", "description").get()
+        def jsonBuilder = new JsonBuilder()
+        jsonBuilder (
+                query: """ mutation M (\$id: String!, \$task: TaskInput!) {
+          updateTask(id: \$id, task: \$task)
+        }""",
+                variables: {
+                    id (t.id)
+                    task (
+                            name: "updatedName",
+                            description: "updatedDesc"
+                    )
+                }
+        )
+
+        then:
+        def response = mockMvc.perform(post("/graphql")
+                .contentType(mediaType)
+                .content(jsonBuilder.toString()))
+                .andReturn()
+                .response
+        def content = new JsonSlurper().parseText(response.contentAsString)
+        def goVerify = { id ->
+            taskService.getTaskById(id).get()
+        }
+
+        expect:
+        content.errors == null
+        content.data.updateTask
+        goVerify(t.id).name == "updatedName"
+        goVerify(t.id).description == "updatedDesc"
+    }
+
+    def "remove task"() {
+        given:
+        Workspace w = workspaceService.createWorkspace(user.id, "removeTask").get()
+        Project p = projectService.createProject(w, "removeTask").get()
+        Task t = taskService.createTask(p, "removeTask").get()
+        def jsonBuilder = new JsonBuilder()
+        jsonBuilder (
+                query: """ mutation M (\$id: String!) {
+          removeTask(id: \$id)
+        }""",
+                variables: {
+                    id (t.id)
+                }
+        )
+        def response = mockMvc.perform(post("/graphql")
+                .contentType(mediaType)
+                .content(jsonBuilder.toString()))
+                .andReturn()
+                .response
+        def content = new JsonSlurper().parseText(response.contentAsString)
+
+        expect:
+        content.errors == null
+        taskService.getTaskById(t.id) == Optional.empty()
+    }
+
+    def "start task"() {
+        given:
+        Workspace w = workspaceService.createWorkspace(user.id, "startTask").get()
+        Project p = projectService.createProject(w, "startTask").get()
+        Task t = taskService.createTask(p, "startTask").get()
+        def jsonBuilder = new JsonBuilder()
+        jsonBuilder (
+                query: """ mutation M (\$taskId: String!) {
+          startTask(taskId: \$taskId) {
+            id startDate
+          }
+        }""",
+                variables: {
+                    taskId (t.id)
+                }
+        )
+        def response = mockMvc.perform(post("/graphql")
+                .contentType(mediaType)
+                .content(jsonBuilder.toString()))
+                .andReturn()
+                .response
+        def content = new JsonSlurper().parseText(response.contentAsString)
+
+        expect:
+        content.errors == null
+        response.status == HttpStatus.OK.value()
+        content.data.startTask.id != ""
+        content.data.startTask.startDate != ""
+    }
+
+    def "stop time entry"() {
+        given:
+        Workspace w = workspaceService.createWorkspace(user.id, "stopTime").get()
+        Project p = projectService.createProject(w, "stopTime").get()
+        Task t = taskService.createTask(p, "stopTime").get()
+        TimeEntry te = timeEntryService.createTimeEntry(t).get()
+        def jsonBuilder = new JsonBuilder()
+        jsonBuilder (
+                query: """ mutation M (\$id: String!) {
+          stopTimeEntry(id: \$id) {
+            id startDate endDate duration
+          }
+        }""",
+                variables: {
+                    id (te.id)
+                }
+        )
+        def response = mockMvc.perform(post("/graphql")
+                .contentType(mediaType)
+                .content(jsonBuilder.toString()))
+                .andReturn()
+                .response
+        def content = new JsonSlurper().parseText(response.contentAsString)
+
+        def durationVerify = { startDate, endDate ->
+            Long duration = Long.valueOf(endDate) - Long.valueOf(startDate)
+            Math.toIntExact(duration)
+        }
+
+        expect:
+        content.errors == null
+        response.status == HttpStatus.OK.value()
+        content.data.stopTimeEntry.id == te.id
+        content.data.stopTimeEntry.startDate == te.startDate
+        content.data.stopTimeEntry.duration != 0
+        content.data.stopTimeEntry.endDate != ""
+        durationVerify(content.data.stopTimeEntry.startDate, content.data.stopTimeEntry.endDate) == content.data.stopTimeEntry.duration
+    }
+
+    def "update time entry"() {
+        when:
+        Workspace w = workspaceService.createWorkspace(user.id, "updateTe").get()
+        Project p = projectService.createProject(w, "updateTe").get()
+        Task t = taskService.createTask(p, "updateTe").get()
+        TimeEntry te = timeEntryService.createTimeEntry(t).get()
+        def jsonBuilder = new JsonBuilder()
+        jsonBuilder (
+                query: """ mutation M (\$id: String!, \$timeEntry: TimeEntryInput!) {
+          updateTimeEntry(id: \$id, timeEntry: \$timeEntry)
+        }""",
+                variables: {
+                    id (te.id)
+                    timeEntry (
+                            startDate: "1234567",
+                            endDate: "1234577",
+                            duration: 10
+
+                    )
+                }
+        )
+
+        then:
+        def response = mockMvc.perform(post("/graphql")
+                .contentType(mediaType)
+                .content(jsonBuilder.toString()))
+                .andReturn()
+                .response
+        def content = new JsonSlurper().parseText(response.contentAsString)
+
+        def goVerify = { id ->
+            timeEntryService.getTimeEntryById(id).get()
+        }
+
+        expect:
+        content.errors == null
+        content.data.updateTimeEntry
+        goVerify(te.id).startDate == "1234567"
+        goVerify(te.id).endDate == "1234577"
+        goVerify(te.id).duration == 10
+    }
+
+    def "remove time entry"() {
+        given:
+        Workspace w = workspaceService.createWorkspace(user.id, "removeTe").get()
+        Project p = projectService.createProject(w, "removeTe").get()
+        Task t = taskService.createTask(p, "removeTe").get()
+        TimeEntry te = timeEntryService.createTimeEntry(t).get()
+        def jsonBuilder = new JsonBuilder()
+        jsonBuilder (
+                query: """ mutation M (\$id: String!) {
+          removeTimeEntry(id: \$id)
+        }""",
+                variables: {
+                    id (te.id)
+                }
+        )
+        def response = mockMvc.perform(post("/graphql")
+                .contentType(mediaType)
+                .content(jsonBuilder.toString()))
+                .andReturn()
+                .response
+        def content = new JsonSlurper().parseText(response.contentAsString)
+
+        expect:
+        content.errors == null
+        timeEntryService.getTimeEntryById(te.id) == Optional.empty()
+    }
+
 }

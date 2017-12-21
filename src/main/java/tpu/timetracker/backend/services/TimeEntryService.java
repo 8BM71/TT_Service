@@ -23,7 +23,14 @@ public class TimeEntryService {
   private TaskService taskService;
 
   public Optional<TimeEntry> createTimeEntry(Task t) {
-    return createTimeEntry(t, null, null, null);
+    Objects.requireNonNull(t);
+
+    if ( ! taskService.taskExist(t.getId())){
+      throw new SecurityException(String.format("Task with that id: %s does not exist!", t.getId()));
+    }
+
+    TimeEntry timeEntry = new TimeEntry(t);
+    return Optional.of(timeEntryRepository.save(timeEntry));
   }
 
   public Optional<TimeEntry> createTimeEntry(Task t, String startDate) {
