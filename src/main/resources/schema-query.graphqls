@@ -3,12 +3,6 @@ schema {
     mutation: Mutation
 }
 
-enum TaskState {
-    CREATED
-    EXECUTED
-    COMPLETED
-}
-
 type Query {
     workspace(id: String!, ownerId: String!) : Workspace
     workspaces(ownerId: String!) : [Workspace]!
@@ -43,7 +37,6 @@ type Task {
     crdate: String!
     description: String
     name: String
-    state: TaskState
 
     timeEntry(id: String!): TimeEntry
     timeEntries: [TimeEntry]

@@ -12,7 +12,7 @@ import spock.lang.Specification
 import tpu.timetracker.backend.BackendApplication
 import tpu.timetracker.backend.model.Project
 import tpu.timetracker.backend.model.Task
-import tpu.timetracker.backend.model.TaskState
+
 import tpu.timetracker.backend.model.TimeEntry
 import tpu.timetracker.backend.model.User
 import tpu.timetracker.backend.model.Workspace
@@ -302,8 +302,7 @@ class GraphQLControllerTest extends Specification {
           projId (p.id)
           t (
               description: "my first task desc ever",
-              name: "task may be created without any name",
-              state: TaskState.CREATED
+              name: "task may be created without any name"
           )
         }
     )
@@ -318,7 +317,6 @@ class GraphQLControllerTest extends Specification {
     response.status == HttpStatus.OK.value()
     content.errors == null
     taskService.getTaskById(content.data.createTask).isPresent()
-    taskService.getTaskById(content.data.createTask).get().taskState == TaskState.CREATED
   }
 
     def "update task"() {

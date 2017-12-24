@@ -147,8 +147,6 @@ public class MutationFetchers {
     Map<String, Object> m = environment.getArgument("task");
     String desc = (String) m.get("description");
     String name = (String) m.get("name");
-    Integer stateIndex = (Integer) m.get("state");
-    TaskState state = TaskState.values()[stateIndex];
 
     String projId = environment.getArgument("projId");
 
@@ -157,20 +155,12 @@ public class MutationFetchers {
       throw new EntityExistsException("Project with that id: " + projId + " does not found");
     }
 
-    if ( ! StringUtils.isEmpty(desc) && ! StringUtils.isEmpty(name) && state != null) {
-      return returnDefault.with(taskService.createTask(proj.get(), name, desc, state));
-    }
-
     if ( ! StringUtils.isEmpty(desc) && ! StringUtils.isEmpty(name)) {
       return returnDefault.with(taskService.createTask(proj.get(), name, desc));
     }
 
     if ( ! StringUtils.isEmpty(name)) {
       return returnDefault.with(taskService.createTask(proj.get(), name));
-    }
-
-    if (state != null) {
-      return returnDefault.with(taskService.createTask(proj.get(), state));
     }
 
     return returnDefault.with(taskService.createTask(proj.get()));

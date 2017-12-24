@@ -19,7 +19,6 @@ public class RuntimeWiringBinder {
       .type(RuntimeWiringTypes.taskTypeWiring)
       .type(RuntimeWiringTypes.timeEntryTypeWiring)
       .type(RuntimeWiringTypes.mutationTypeWiring)
-      .type(RuntimeWiringTypes.taskStates)
       .build();
 
   public static GraphQLSchema generateSchema() {

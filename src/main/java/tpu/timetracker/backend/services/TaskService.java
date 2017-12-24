@@ -1,12 +1,10 @@
 package tpu.timetracker.backend.services;
 
-import javafx.beans.binding.ObjectExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tpu.timetracker.backend.jpa.TaskRepository;
 import tpu.timetracker.backend.model.Project;
 import tpu.timetracker.backend.model.Task;
-import tpu.timetracker.backend.model.TaskState;
 import tpu.timetracker.backend.model.Workspace;
 
 import java.util.Collection;
@@ -23,29 +21,21 @@ public class TaskService {
   private ProjectService projectService;
 
   public Optional<Task> createTask(Project p) {
-    return createTask(p, null, null, null);
-  }
-
-  public Optional<Task> createTask(Project p, TaskState state) {
-    return createTask(p, null, null, state);
+    return createTask(p, null, null);
   }
 
   public Optional<Task> createTask(Project project, String name) {
-    return createTask(project, null, name, null);
+    return createTask(project, null, name);
   }
 
-  public Optional<Task> createTask(Project project, String name, String description) {
-    return createTask(project, description, name, null);
-  }
-
-  public Optional<Task> createTask(Project project, String description, String name, TaskState state) {
+  public Optional<Task> createTask(Project project, String description, String name) {
     Objects.requireNonNull(project);
 
     if ( ! projectService.projectExist(project.getId())){
       throw new SecurityException(String.format("Task with that id: %s does not exist!", project.getId()));
     }
 
-    Task task = new Task(project, description, name, state);
+    Task task = new Task(project, description, name);
     return Optional.of(taskRepository.save(task));
   }
 

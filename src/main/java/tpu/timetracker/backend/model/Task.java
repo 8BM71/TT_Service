@@ -31,17 +31,13 @@ final public class Task extends AbstractEntity {
   private Project project;
 
   @Column
-  @Enumerated(EnumType.ORDINAL)
-  private TaskState taskState;
-
-  @Column
   private String description;
 
-  public Task(Project project, String description, String name, TaskState state) {
+  public Task(Project project, String description, String name) {
     this.project = project;
+    this.workspace = this.project.getWorkspace();
     this.description = description;
     this.name = name;
-    this.taskState = state;
   }
 
   public Task(Project project) {
@@ -69,14 +65,6 @@ final public class Task extends AbstractEntity {
 
   public void setName(String name) {
     this.name = name;
-  }
-
-  public TaskState getTaskState() {
-    return taskState;
-  }
-
-  public void setTaskState(TaskState taskState) {
-    this.taskState = taskState;
   }
 
   public Workspace getWorkspace() { return workspace; }
