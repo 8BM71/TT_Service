@@ -1,14 +1,19 @@
 package tpu.timetracker.backend.graphql;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import graphql.schema.DataFetcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import tpu.timetracker.backend.auth.GoogleTokenVerifierTemplate;
 import tpu.timetracker.backend.model.*;
 import tpu.timetracker.backend.services.*;
 
 import javax.persistence.EntityExistsException;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 @Component
@@ -23,15 +28,18 @@ public class MutationFetchers {
 
   private static TaskService taskService;
 
+  private static GoogleTokenVerifierTemplate googleTokenVerifierTemplate;
+
   @Autowired
   public MutationFetchers(WorkspaceService workspaceService, UserService userService,
                        ProjectService projectService, TimeEntryService timeEntryService,
-                       TaskService taskService) {
+                       TaskService taskService, GoogleTokenVerifierTemplate googleTokenVerifierTemplate) {
     MutationFetchers.workspaceService = workspaceService;
     MutationFetchers.userService = userService;
     MutationFetchers.projectService = projectService;
     MutationFetchers.timeEntryService = timeEntryService;
     MutationFetchers.taskService = taskService;
+    MutationFetchers.googleTokenVerifierTemplate = googleTokenVerifierTemplate;
   }
 
   @FunctionalInterface
@@ -252,5 +260,42 @@ public class MutationFetchers {
 
     Optional<Workspace> ws = workspaceService.getWorkspaceById(wsId);
     return ! ws.isPresent();
+  };
+
+  static DataFetcher auth = environment -> {
+    String token = environment.getArgument("token");
+
+    try {
+      GoogleIdToken googleIdToken = googleTokenVerifierTemplate.verify(token);
+      if (Objects.isNull(googleIdToken)) {
+        throw new SecurityException("Unauthorized");
+      }
+
+      String email = googleIdToken.getPayload().getEmail();
+      Optional<User> userExist = userService.getUserByEmail(email);
+      if (userExist.isPresent()) {
+        return userExist;
+      }
+
+      String name = (String) googleIdToken.getPayload().get("given_name");
+      String familyName = (String) googleIdToken.getPayload().get("family_name");
+      Optional<User> newUser;
+      if ( ! Objects.isNull(familyName) && ! Objects.isNull(name)) {
+        newUser = userService.createUser(familyName, email, name);
+      } else if ( ! Objects.isNull(familyName)) {
+        newUser = userService.createUser(familyName, email);
+      } else if ( ! Objects.isNull(name)) {
+        newUser = userService.createUser(name, email);
+      } else {
+        newUser = userService.createUser(email, email);
+      }
+
+      return newUser;
+
+    } catch (GeneralSecurityException | IOException e) {
+      e.printStackTrace();
+    }
+
+    return Optional.empty();
   };
 }

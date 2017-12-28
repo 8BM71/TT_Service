@@ -3,8 +3,13 @@ security:
     enabled: false
   require-ssl: true
 
+tputt:
+  google:
+    issuer: https://accounts.google.com
+    clientId: ${CLIENT_ID}
+
 server:
-  port: 443
+  port: 8080
   http:
     port: 80
   ssl:

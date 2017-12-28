@@ -35,6 +35,9 @@ dependencies {
 	compile "org.springframework.boot:spring-boot-starter-data-rest"
 	compile "org.springframework.boot:spring-boot-starter-security"
 	compile "com.graphql-java:graphql-java:${graphqlVersion}"
+	compile ("com.google.api-client:google-api-client:${googleClientApi}"){
+		exclude group: "com.google.guava", module: "guava-jdk5"
+	}
 
 	runtime "com.h2database:h2"
 

@@ -83,5 +83,6 @@ class RuntimeWiringTypes {
               .dataFetcher("removeTimeEntry", MutationFetchers.removeTimeEntry)
               .dataFetcher("createTask", MutationFetchers.createTask)
               .dataFetcher("updateTask", MutationFetchers.updateTask)
-              .dataFetcher("removeTask", MutationFetchers.removeTask));
+              .dataFetcher("removeTask", MutationFetchers.removeTask)
+              .dataFetcher("auth", MutationFetchers.auth));
 }

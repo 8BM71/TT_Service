@@ -1,5 +1,5 @@
 type Mutation {
-#    auth(token: TokenInput): Boolean
+    auth(token: String!): User!
     createUser(user: UserInput!): String!
 
     # @return wsID
