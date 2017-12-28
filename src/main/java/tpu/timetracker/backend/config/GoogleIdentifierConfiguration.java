@@ -9,12 +9,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import tpu.timetracker.backend.auth.GoogleTokenVerifierTemplate;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
 public class GoogleIdentifierConfiguration {
 
-  @Value("${tputt.google.issuer}")
+  @Value("${tputt.google.issuer.https}")
+  private String issuerSecure;
+
+  @Value("${tputt.google.issuer.http}")
   private String issuer;
 
   @Value("${tputt.google.clientId}")
@@ -26,7 +30,7 @@ public class GoogleIdentifierConfiguration {
   @Bean
   public GoogleIdTokenVerifier googleIdTokenVerifier(JacksonFactory jacksonFactory, HttpTransport httpTransport) {
     return new GoogleIdTokenVerifier.Builder(httpTransport, jacksonFactory)
-        .setIssuer(issuer)
+        .setIssuers(Arrays.asList(issuer, issuerSecure))
         .setAudience(Collections.singletonList(clientId))
         .build();
   }

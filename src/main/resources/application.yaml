@@ -5,7 +5,9 @@ security:
 
 tputt:
   google:
-    issuer: https://accounts.google.com
+    issuer:
+      http: accounts.google.com
+      https: https://accounts.google.com
     clientId: ${CLIENT_ID:empty}
 
 server:
