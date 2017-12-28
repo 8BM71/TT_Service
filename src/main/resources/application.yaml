@@ -6,7 +6,7 @@ security:
 tputt:
   google:
     issuer: https://accounts.google.com
-    clientId: ${CLIENT_ID}
+    clientId: ${CLIENT_ID:empty}
 
 server:
   port: 443
