@@ -9,7 +9,7 @@ tputt:
     clientId: ${CLIENT_ID}
 
 server:
-  port: 8080
+  port: 443
   http:
     port: 80
   ssl:
